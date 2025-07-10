@@ -8,5 +8,6 @@ export default class TicketService {
 
   purchaseTickets(accountId, ...ticketTypeRequests) {
     // throws InvalidPurchaseException
+    return {status: 201, message: 'Thank you for your order.'}
   }
 }
