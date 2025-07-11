@@ -7,7 +7,17 @@ export default class TicketService {
    */
 
   purchaseTickets(accountId, ...ticketTypeRequests) {
+    this.#validateAccountId(accountId)
     // throws InvalidPurchaseException
     return {status: 201, message: 'Thank you for your order.'}
+  }
+
+  #validateAccountId(accountId) {
+    if(isNaN(accountId)){
+      throw {
+        status: 400,
+        message: 'Account ID must be a number.'
+      }
+    }
   }
 }
