@@ -65,5 +65,14 @@ describe('TicketService', () => {
         expect(err).toEqual({detail: 'No tickets requested.', ...errorObj})
       }
     });
+
+    it('throws error when ticket number is zero', () => {
+      try{
+        ticketService.purchaseTickets(1234, {ADULT: 0})
+      } catch (err) {
+        expect(err).toEqual({detail: 'Cannot request zero tickets.', ...errorObj})
+      }
+    });
+
   });
 });

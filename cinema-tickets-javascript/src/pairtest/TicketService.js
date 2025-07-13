@@ -25,28 +25,29 @@ export default class TicketService {
   }
 
   
-#validateTicketTypeRequest(ticketTypeRequest) {
-  let errorName = 'validateTicketTypeRequest';
+  #validateTicketTypeRequest(ticketTypeRequest) {
+    let errorName = 'validateTicketTypeRequest';
 
-
-  if(!ticketTypeRequest.length){
-    throw new InvalidPurchaseException(errorName, 400, 'No tickets requested.')
-      .globalExceptionHandler();
-  }
-
-
-  ticketTypeRequest.forEach(ticketRequest => {
-    let type = Object.keys(ticketRequest)[0]
-    let noOfTickets = ticketRequest[type] === 0? NaN : ticketRequest[type]
-
-
-    try{
-      new TicketTypeRequest(type, noOfTickets)
-    } catch (errMessage) {
-      throw new InvalidPurchaseException(errorName, 400, errMessage)
-      .globalExceptionHandler();
+    if(!ticketTypeRequest.length){
+      throw new InvalidPurchaseException(errorName, 400, 'No tickets requested.')
+        .globalExceptionHandler();
     }
-  });
-}
 
+    ticketTypeRequest.forEach(ticketRequest => {
+      let type = Object.keys(ticketRequest)[0]
+      let noOfTickets = ticketRequest[type]
+
+      if(noOfTickets <= 0){
+        throw new InvalidPurchaseException(errorName, 400, 'Cannot request zero tickets.')
+        .globalExceptionHandler();
+      }
+
+      try{
+        new TicketTypeRequest(type, noOfTickets)
+      } catch (errMessage) {
+        throw new InvalidPurchaseException(errorName, 400, errMessage)
+        .globalExceptionHandler();
+      }
+    });
+  }
 }
