@@ -101,18 +101,29 @@ describe('TicketService', () => {
     });
 
     it.each([
-      [1234, {ADULT: 26}, {CHILD: 0}],
-      [1234, {ADULT: 15}, {CHILD: 15}],
+      [{ADULT: 26}, {CHILD: 0}],
+      [{ADULT: 15}, {CHILD: 15}],
     ])(
       'throws error if ticket total exceeds 25',
-      (accountId, adultTickets, childTickets) => {
+      (adultTickets, childTickets) => {
         expect.assertions(1);
         try{
-          ticketService.purchaseTickets(accountId, adultTickets, childTickets)
+          ticketService.purchaseTickets(1234, adultTickets, childTickets)
         } catch (err) {
           expect(err).toEqual({detail: 'Total ticket number cannot exceed 25.', ...errorObj})
         }
       }
     );
+
+    it('handles TicketTypeRequest errors', () => {
+      expect.assertions(1);
+      try{
+        ticketService.purchaseTickets(1234, {someKey: 1})
+      } catch (err) {
+        expect(err).toEqual({detail: 'Ticket type must be ADULT, CHILD or INFANT.', ...errorObj})
+      }
+    });
+
+    
   });
 });

@@ -65,18 +65,19 @@ export default class TicketService {
   }
 
   #ticketTypeRequestHandler(ticketTypeRequests) {
-    let ticketTotal = 0;
+    let errorName = 'validateTicketTypeRequest';
 
     ticketTypeRequests.forEach(ticketRequest => {
       let type = Object.keys(ticketRequest)[0]
       let noOfTickets = ticketRequest[type]
-      ticketTotal += noOfTickets
 
       try{
         new TicketTypeRequest(type, noOfTickets)
-      } catch (errMessage) {
-        throw new InvalidPurchaseException(errorName, 400, errMessage)
-        .globalExceptionHandler();
+      } catch (err) {
+        if(err.message === 'type must be ADULT, CHILD, or INFANT'){
+          throw new InvalidPurchaseException(errorName, 400, 'Ticket type must be ADULT, CHILD or INFANT.')
+          .globalExceptionHandler();
+        }
       }
 
       switch (type) {
