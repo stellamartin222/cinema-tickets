@@ -8,6 +8,7 @@ export default class TicketService {
 
   #totalTickets = 0;
   #adultTickets = 0;
+  #childTickets = 0;
   #infantTickets = 0;
 
   purchaseTickets(accountId, ...ticketTypeRequests) {
@@ -46,6 +47,13 @@ export default class TicketService {
       .globalExceptionHandler();
     }
 
+    if(this.#adultTickets < this.#childTickets){
+      throw new InvalidPurchaseException(
+        errorName, 400, 'A child must be accompanied by an adult.'
+      )
+      .globalExceptionHandler();
+    }
+
     if(this.ticketTotal <= 0){
       throw new InvalidPurchaseException(errorName, 400, 'Cannot request zero tickets.')
       .globalExceptionHandler();
@@ -72,9 +80,14 @@ export default class TicketService {
           this.#adultTickets += noOfTickets
           this.#totalTickets += noOfTickets
           break;
+        case 'CHILD':
+          this.#childTickets += noOfTickets
+          this.#totalTickets += noOfTickets
+          break;
         case 'INFANT':
           this.#infantTickets += noOfTickets
           this.#totalTickets += noOfTickets
+          break;
       }
 
       return

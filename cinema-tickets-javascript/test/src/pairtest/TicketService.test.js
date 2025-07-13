@@ -84,5 +84,13 @@ describe('TicketService', () => {
         expect(err).toEqual({detail: 'Must be one adult per infant ticket purchased.', ...errorObj})
       }
     });
+
+    it('throws error if children without adults', () => {
+      try{
+        ticketService.purchaseTickets(1234, {CHILD: 1})
+      } catch (err) {
+        expect(err).toEqual({detail: 'A child must be accompanied by an adult.', ...errorObj})
+      }
+    });
   });
 });
