@@ -31,4 +31,10 @@ describe('TicketService', () => {
       ticketService.purchaseTickets(-5, [{ADULT: 1}])
     }).toThrow()
   });
+
+  it('throws an error when no ticketTypeRequest ', () => {
+    expect(() => {
+      ticketService.purchaseTickets(1234)
+    }).toThrow()
+  });
 });
