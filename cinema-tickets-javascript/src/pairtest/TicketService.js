@@ -77,6 +77,9 @@ export default class TicketService {
         if(err.message === 'type must be ADULT, CHILD, or INFANT'){
           throw new InvalidPurchaseException(errorName, 400, 'Ticket type must be ADULT, CHILD or INFANT.')
           .globalExceptionHandler();
+        } else {
+          throw new InvalidPurchaseException(errorName, 400, 'Number of tickets must be an integer.')
+          .globalExceptionHandler();
         }
       }
 

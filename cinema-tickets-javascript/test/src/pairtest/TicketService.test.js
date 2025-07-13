@@ -115,15 +115,19 @@ describe('TicketService', () => {
       }
     );
 
-    it('handles TicketTypeRequest errors', () => {
-      expect.assertions(1);
-      try{
-        ticketService.purchaseTickets(1234, {someKey: 1})
-      } catch (err) {
-        expect(err).toEqual({detail: 'Ticket type must be ADULT, CHILD or INFANT.', ...errorObj})
+    it.each([
+      [{someKey: 1}, 'Ticket type must be ADULT, CHILD or INFANT.'],
+      [{ADULT: 'someValue'}, 'Number of tickets must be an integer.'],
+    ])(
+      'handles TicketTypeRequest errors',
+      (tickets, errorMessage) => {
+        expect.assertions(1);
+        try{
+          ticketService.purchaseTickets(1234, tickets)
+        } catch (err) {
+          expect(err).toEqual({detail: errorMessage, ...errorObj})
+        }
       }
-    });
-
-    
+    );
   });
 });
