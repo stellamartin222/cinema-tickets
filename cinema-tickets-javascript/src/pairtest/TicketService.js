@@ -39,10 +39,10 @@ export default class TicketService {
 
     this.#ticketTypeRequestHandler(ticketTypeRequests);
 
-    console.log(ticketTypeRequests.INFANT)
-
     if(this.#adultTickets < this.#infantTickets){
-      throw new InvalidPurchaseException(errorName, 400, 'Cannot request ticket for infant without adult.')
+      throw new InvalidPurchaseException(
+        errorName, 400, 'Must be one adult per infant ticket purchased.'
+      )
       .globalExceptionHandler();
     }
 

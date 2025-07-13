@@ -77,14 +77,11 @@ describe('TicketService', () => {
       }
     });
 
-    it('throws an error if infant with no adult', () => {
-      expect(() => {
-        ticketService.purchaseTickets('someString', {INFANT: 1})
-      }).toThrow()
+    it('throws an error if less adults than infants', () => {
       try{
-        ticketService.purchaseTickets(1234, {INFANT: 1})
+        ticketService.purchaseTickets(1234,  {ADULT: 1}, {INFANT: 4})
       } catch (err) {
-        expect(err).toEqual({detail: 'Cannot request ticket for infant without adult.', ...errorObj})
+        expect(err).toEqual({detail: 'Must be one adult per infant ticket purchased.', ...errorObj})
       }
     });
   });
