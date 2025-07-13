@@ -6,6 +6,10 @@ export default class TicketService {
    * Should only have private methods other than the one below.
    */
 
+  #totalTickets = 0;
+  #adultTickets = 0;
+  #infantTickets = 0;
+
   purchaseTickets(accountId, ...ticketTypeRequests) {
     this.#validateAccountId(accountId)
     this.#validateTicketTypeRequests(ticketTypeRequests)
@@ -27,17 +31,34 @@ export default class TicketService {
   
   #validateTicketTypeRequests(ticketTypeRequests) {
     let errorName = 'validateTicketTypeRequest';
-    let totalRequestedTickets = 0;
 
     if(!ticketTypeRequests.length){
       throw new InvalidPurchaseException(errorName, 400, 'No tickets requested.')
         .globalExceptionHandler();
     }
 
+    this.#ticketTypeRequestHandler(ticketTypeRequests);
+
+    console.log(ticketTypeRequests.INFANT)
+
+    if(this.#adultTickets < this.#infantTickets){
+      throw new InvalidPurchaseException(errorName, 400, 'Cannot request ticket for infant without adult.')
+      .globalExceptionHandler();
+    }
+
+    if(this.ticketTotal <= 0){
+      throw new InvalidPurchaseException(errorName, 400, 'Cannot request zero tickets.')
+      .globalExceptionHandler();
+    }
+  }
+
+  #ticketTypeRequestHandler(ticketTypeRequests) {
+    let ticketTotal = 0;
+
     ticketTypeRequests.forEach(ticketRequest => {
       let type = Object.keys(ticketRequest)[0]
       let noOfTickets = ticketRequest[type]
-      totalRequestedTickets += noOfTickets;
+      ticketTotal += noOfTickets
 
       try{
         new TicketTypeRequest(type, noOfTickets)
@@ -45,11 +66,18 @@ export default class TicketService {
         throw new InvalidPurchaseException(errorName, 400, errMessage)
         .globalExceptionHandler();
       }
-    });
 
-    if(totalRequestedTickets <= 0){
-      throw new InvalidPurchaseException(errorName, 400, 'Cannot request zero tickets.')
-      .globalExceptionHandler();
-    }
+      switch (type) {
+        case 'ADULT':
+          this.#adultTickets += noOfTickets
+          this.#totalTickets += noOfTickets
+          break;
+        case 'INFANT':
+          this.#infantTickets += noOfTickets
+          this.#totalTickets += noOfTickets
+      }
+
+      return
+    });
   }
 }

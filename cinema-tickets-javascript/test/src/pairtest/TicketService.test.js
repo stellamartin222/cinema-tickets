@@ -76,5 +76,16 @@ describe('TicketService', () => {
         expect(err).toEqual({detail: 'Cannot request zero tickets.', ...errorObj})
       }
     });
+
+    it('throws an error if infant with no adult', () => {
+      expect(() => {
+        ticketService.purchaseTickets('someString', {INFANT: 1})
+      }).toThrow()
+      try{
+        ticketService.purchaseTickets(1234, {INFANT: 1})
+      } catch (err) {
+        expect(err).toEqual({detail: 'Cannot request ticket for infant without adult.', ...errorObj})
+      }
+    });
   });
 });
