@@ -16,29 +16,32 @@ export default class TicketService {
     let name = 'validateAccountId';
 
     if(isNaN(accountId)){
-      throw new InvalidPurchaseException(
-        name, 
-        400, 
-        'Account ID must be a number.'
-      ).globalExceptionHandler();
+      throw new InvalidPurchaseException(name, 400, 'Account ID must be a number.')
+      .globalExceptionHandler();
     } else if (accountId <= 0){
-      throw new InvalidPurchaseException(
-        name, 
-        400, 
-        'Account ID must be greater than zero.'
-      ).globalExceptionHandler();
+      throw new InvalidPurchaseException(name, 400, 'Account ID must be greater than zero.')
+      .globalExceptionHandler();
     }
   }
 
   #validateTicketTypeRequest(ticketTypeRequest) {
     let name = 'validateTicketTypeRequest';
 
-    if (!ticketTypeRequest.length) {
-      throw new InvalidPurchaseException(
-        name, 
-        400, 
-        'Account ID must be a number.'
-      ).globalExceptionHandler();
+    if(!ticketTypeRequest.length){
+      throw new InvalidPurchaseException(name, 400, 'Account ID must be a number.')
+        .globalExceptionHandler();
     }
+
+    ticketTypeRequest.forEach(ticketRequest => {
+      let type = Object.keys(ticketRequest)[0]
+      let noOfTickets = ticketRequest[type]
+
+      try{
+        new TicketTypeRequest(type, noOfTickets)
+      } catch{
+        throw new InvalidPurchaseException(name, 400, 'Account ID must be a number.')
+        .globalExceptionHandler();
+      }
+    });
   }
 }
