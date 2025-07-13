@@ -10,6 +10,7 @@ export default class TicketService {
   #adultTickets = 0;
   #childTickets = 0;
   #infantTickets = 0;
+  #MAX_TICKET_ORDER = 25;
 
   purchaseTickets(accountId, ...ticketTypeRequests) {
     this.#validateAccountId(accountId)
@@ -54,8 +55,11 @@ export default class TicketService {
       .globalExceptionHandler();
     }
 
-    if(this.ticketTotal <= 0){
+    if(this.#totalTickets <= 0){
       throw new InvalidPurchaseException(errorName, 400, 'Cannot request zero tickets.')
+      .globalExceptionHandler();
+    } else if (this.#totalTickets > this.#MAX_TICKET_ORDER) {
+      throw new InvalidPurchaseException(errorName, 400, 'Total ticket number cannot exceed 25.')
       .globalExceptionHandler();
     }
   }
