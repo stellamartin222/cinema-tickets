@@ -13,11 +13,16 @@ export default class TicketService {
   }
 
   #validateAccountId(accountId) {
+    let name = 'validateAccountId';
+    let status;
+    let message;
+
     if(isNaN(accountId)){
-      throw {
-        status: 400,
-        message: 'Account ID must be a number.'
-      }
+      throw new InvalidPurchaseException(
+        name, 
+        status = 400, 
+        message = 'Account ID must be a number.'
+      ).globalExceptionHandler();
     }
   }
 }
