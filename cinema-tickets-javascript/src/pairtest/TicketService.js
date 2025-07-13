@@ -8,7 +8,6 @@ export default class TicketService {
 
   purchaseTickets(accountId, ...ticketTypeRequests) {
     this.#validateAccountId(accountId)
-    // throws InvalidPurchaseException
     return {status: 201, message: 'Thank you for your order.'}
   }
 
@@ -22,6 +21,12 @@ export default class TicketService {
         name, 
         status = 400, 
         message = 'Account ID must be a number.'
+      ).globalExceptionHandler();
+    } else if (accountId <= 0){
+      throw new InvalidPurchaseException(
+        name, 
+        status = 400, 
+        message = 'Account ID must be greater than zero.'
       ).globalExceptionHandler();
     }
   }

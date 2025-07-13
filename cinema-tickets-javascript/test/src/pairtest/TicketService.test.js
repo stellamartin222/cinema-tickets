@@ -15,5 +15,20 @@ describe('TicketService', () => {
     expect(() => {
       ticketService.purchaseTickets([{ADULT: 1}])
     }).toThrow()
+    expect(() => {
+      ticketService.purchaseTickets('someString', [{ADULT: 1}])
+    }).toThrow()
+    expect(() => {
+      ticketService.purchaseTickets(NaN, [{ADULT: 1}])
+    }).toThrow()
+  });
+
+  it('throws an error when the accountId is zero or below', () => {
+    expect(() => {
+      ticketService.purchaseTickets(0, [{ADULT: 1}])
+    }).toThrow()
+    expect(() => {
+      ticketService.purchaseTickets(-5, [{ADULT: 1}])
+    }).toThrow()
   });
 });
