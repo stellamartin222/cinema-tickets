@@ -13,35 +13,40 @@ export default class TicketService {
   }
 
   #validateAccountId(accountId) {
-    let name = 'validateAccountId';
+    let errorName = 'validateAccountId';
 
     if(isNaN(accountId)){
-      throw new InvalidPurchaseException(name, 400, 'Account ID must be a number.')
+      throw new InvalidPurchaseException(errorName, 400, 'Account ID must be a number.')
       .globalExceptionHandler();
     } else if (accountId <= 0){
-      throw new InvalidPurchaseException(name, 400, 'Account ID must be greater than zero.')
+      throw new InvalidPurchaseException(errorName, 400, 'Account ID must be greater than zero.')
       .globalExceptionHandler();
     }
   }
 
-  #validateTicketTypeRequest(ticketTypeRequest) {
-    let name = 'validateTicketTypeRequest';
+  
+#validateTicketTypeRequest(ticketTypeRequest) {
+  let errorName = 'validateTicketTypeRequest';
 
-    if(!ticketTypeRequest.length){
-      throw new InvalidPurchaseException(name, 400, 'Account ID must be a number.')
-        .globalExceptionHandler();
-    }
 
-    ticketTypeRequest.forEach(ticketRequest => {
-      let type = Object.keys(ticketRequest)[0]
-      let noOfTickets = ticketRequest[type]
-
-      try{
-        new TicketTypeRequest(type, noOfTickets)
-      } catch{
-        throw new InvalidPurchaseException(name, 400, 'Account ID must be a number.')
-        .globalExceptionHandler();
-      }
-    });
+  if(!ticketTypeRequest.length){
+    throw new InvalidPurchaseException(errorName, 400, 'No tickets requested.')
+      .globalExceptionHandler();
   }
+
+
+  ticketTypeRequest.forEach(ticketRequest => {
+    let type = Object.keys(ticketRequest)[0]
+    let noOfTickets = ticketRequest[type] === 0? NaN : ticketRequest[type]
+
+
+    try{
+      new TicketTypeRequest(type, noOfTickets)
+    } catch (errMessage) {
+      throw new InvalidPurchaseException(errorName, 400, errMessage)
+      .globalExceptionHandler();
+    }
+  });
+}
+
 }

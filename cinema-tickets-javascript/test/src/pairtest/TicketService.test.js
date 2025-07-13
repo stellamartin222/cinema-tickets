@@ -1,3 +1,4 @@
+import InvalidPurchaseException from '../../../src/pairtest/lib/InvalidPurchaseException';
 import TicketService from '../../../src/pairtest/TicketService';
 
 describe('TicketService', () => {
@@ -13,33 +14,56 @@ describe('TicketService', () => {
   });
 
   describe('validateAccountId', () => {
-    it('throws error when the accountId is not a number', () => {
-      expect(() => {
-        ticketService.purchaseTickets({ADULT: 1})
-      }).toThrow()
-      expect(() => {
-        ticketService.purchaseTickets('someString', {ADULT: 1})
-      }).toThrow()
-      expect(() => {
-        ticketService.purchaseTickets(NaN, {ADULT: 1})
-      }).toThrow()
-    });
+    let errorObj = {
+      statusCode: 400,
+      type: 'validateAccountId',
+      title: "An error occured",
+    }
+
+    it.each([
+      [0, [{ADULT: 1}]],
+      [-10, [{ADULT: 1}]]
+    ])(
+      'throws error when accountId not a number',
+      (input) => {
+        try{
+          ticketService.purchaseTickets(input)
+        } catch (err) {
+          expect(err).toEqual({detail: 'Account ID must be greater than zero.', ...errorObj})
+        }
+      }
+    );
   
-    it('throws error when the accountId is zero or below', () => {
-      expect(() => {
-        ticketService.purchaseTickets(0, {ADULT: 1})
-      }).toThrow()
-      expect(() => {
-        ticketService.purchaseTickets(-5, {ADULT: 1})
-      }).toThrow()
-    });
+  
+    it.each([
+      [0, {ADULT: 1}],
+      [-10, {ADULT: 1}]
+    ])(
+      'Throws an error when accountId less than one',
+      (input) => {
+        try{
+          ticketService.purchaseTickets(input)
+        } catch (err) {
+          expect(err).toEqual({detail: 'Account ID must be greater than zero.', ...errorObj})
+        }
+      }
+    );
+  
   });
 
-  describe('validateTicketTypeRequest', () => {    
+  describe('validateTicketTypeRequest', () => { 
+    let errorObj = {
+      statusCode: 400,
+      type: 'validateTicketTypeRequest',
+      title: "An error occured",
+    }
+    
     it('throws error when no ticketTypeRequest ', () => {
-      expect(() => {
+      try{
         ticketService.purchaseTickets(1234)
-      }).toThrow()
+      } catch (err) {
+        expect(err).toEqual({detail: 'No tickets requested.', ...errorObj})
+      }
     });
   });
 });
