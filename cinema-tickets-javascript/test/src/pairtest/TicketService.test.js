@@ -11,6 +11,8 @@ describe('TicketService', () => {
   it('will return success object on successful ticket purchase', () => {
       expect(ticketService.purchaseTickets(1234, {ADULT: 1}, {CHILD: 1}, {INFANT: 1}))
       .toEqual({status: 201, message: 'Thank you for your order.'});
+      expect(ticketService.purchaseTickets(1234, {ADULT: 1}, {CHILD: 0}, {INFANT: 1}))
+      .toEqual({status: 201, message: 'Thank you for your order.'});
   });
 
   describe('validateAccountId', () => {
@@ -21,28 +23,29 @@ describe('TicketService', () => {
     }
 
     it.each([
-      [0, [{ADULT: 1}]],
-      [-10, [{ADULT: 1}]]
+      [NaN],
+      ['someString'],
+      [{}]
     ])(
       'throws error when accountId not a number',
       (input) => {
         try{
-          ticketService.purchaseTickets(input)
+          ticketService.purchaseTickets(input, {ADULT: 1})
         } catch (err) {
-          expect(err).toEqual({detail: 'Account ID must be greater than zero.', ...errorObj})
+          expect(err).toEqual({detail: 'Account ID must be a number.', ...errorObj})
         }
       }
     );
   
   
     it.each([
-      [0, {ADULT: 1}],
-      [-10, {ADULT: 1}]
+      [0,],
+      [-10]
     ])(
-      'Throws an error when accountId less than one',
+      'throws an error when accountId less than one',
       (input) => {
         try{
-          ticketService.purchaseTickets(input)
+          ticketService.purchaseTickets(input, {ADULT: 1})
         } catch (err) {
           expect(err).toEqual({detail: 'Account ID must be greater than zero.', ...errorObj})
         }
@@ -58,7 +61,7 @@ describe('TicketService', () => {
       title: "An error occured",
     }
     
-    it('throws error when no ticketTypeRequest ', () => {
+    it('throws error when no ticketTypeRequest', () => {
       try{
         ticketService.purchaseTickets(1234)
       } catch (err) {
@@ -66,13 +69,12 @@ describe('TicketService', () => {
       }
     });
 
-    it('throws error when ticket number is zero', () => {
+    it('throws error when total ticket number is zero', () => {
       try{
         ticketService.purchaseTickets(1234, {ADULT: 0})
       } catch (err) {
         expect(err).toEqual({detail: 'Cannot request zero tickets.', ...errorObj})
       }
     });
-
   });
 });

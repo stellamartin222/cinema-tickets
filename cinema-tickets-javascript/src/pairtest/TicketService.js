@@ -8,7 +8,7 @@ export default class TicketService {
 
   purchaseTickets(accountId, ...ticketTypeRequests) {
     this.#validateAccountId(accountId)
-    this.#validateTicketTypeRequest(ticketTypeRequests)
+    this.#validateTicketTypeRequests(ticketTypeRequests)
     return {status: 201, message: 'Thank you for your order.'}
   }
 
@@ -25,22 +25,19 @@ export default class TicketService {
   }
 
   
-  #validateTicketTypeRequest(ticketTypeRequest) {
+  #validateTicketTypeRequests(ticketTypeRequests) {
     let errorName = 'validateTicketTypeRequest';
+    let totalRequestedTickets = 0;
 
-    if(!ticketTypeRequest.length){
+    if(!ticketTypeRequests.length){
       throw new InvalidPurchaseException(errorName, 400, 'No tickets requested.')
         .globalExceptionHandler();
     }
 
-    ticketTypeRequest.forEach(ticketRequest => {
+    ticketTypeRequests.forEach(ticketRequest => {
       let type = Object.keys(ticketRequest)[0]
       let noOfTickets = ticketRequest[type]
-
-      if(noOfTickets <= 0){
-        throw new InvalidPurchaseException(errorName, 400, 'Cannot request zero tickets.')
-        .globalExceptionHandler();
-      }
+      totalRequestedTickets += noOfTickets;
 
       try{
         new TicketTypeRequest(type, noOfTickets)
@@ -49,5 +46,10 @@ export default class TicketService {
         .globalExceptionHandler();
       }
     });
+
+    if(totalRequestedTickets <= 0){
+      throw new InvalidPurchaseException(errorName, 400, 'Cannot request zero tickets.')
+      .globalExceptionHandler();
+    }
   }
 }
