@@ -3,6 +3,8 @@ import TicketService from '../../../src/pairtest/TicketService';
 
 describe('TicketService', () => {
   let ticketService;
+
+  const VALID_ACCOUNT_ID = 1234;
   
   beforeEach(async () => {
       ticketService = new TicketService;
@@ -10,9 +12,9 @@ describe('TicketService', () => {
 
   it('will return success object on successful ticket purchase', () => {
     expect.assertions(2);
-      expect(ticketService.purchaseTickets(1234, {ADULT: 1}, {CHILD: 1}, {INFANT: 1}))
+      expect(ticketService.purchaseTickets(VALID_ACCOUNT_ID, {ADULT: 1}, {CHILD: 1}, {INFANT: 1}))
       .toEqual({status: 201, message: 'Thank you for your order.'});
-      expect(ticketService.purchaseTickets(1234, {ADULT: 1}, {CHILD: 0}, {INFANT: 1}))
+      expect(ticketService.purchaseTickets(VALID_ACCOUNT_ID, {ADULT: 1}, {CHILD: 0}, {INFANT: 1}))
       .toEqual({status: 201, message: 'Thank you for your order.'});
   });
 
@@ -24,34 +26,27 @@ describe('TicketService', () => {
     }
 
     it.each([
+      ['a'],
       [NaN],
-      ['someString'],
       [{}]
     ])(
       'throws error when accountId not a number',
-      (input) => {
-        expect.assertions(1);
-        try{
-          ticketService.purchaseTickets(input, {ADULT: 1})
-        } catch (err) {
-          expect(err).toEqual({detail: 'Account ID must be a number.', ...errorObj})
-        }
+      (invalidAccountId) => {
+        expect(ticketService.purchaseTickets(invalidAccountId, {ADULT: 1})).toEqual(
+          {detail: 'Account ID must be a number.', ...errorObj}
+        )
       }
     );
   
-  
     it.each([
-      [0,],
+      [0],
       [-10]
     ])(
       'throws an error when accountId less than one',
-      (input) => {
-        expect.assertions(1);
-        try{
-          ticketService.purchaseTickets(input, {ADULT: 1})
-        } catch (err) {
-          expect(err).toEqual({detail: 'Account ID must be greater than zero.', ...errorObj})
-        }
+      (invalidAccountId) => {
+        expect(ticketService.purchaseTickets(invalidAccountId, {ADULT: 1})).toEqual(
+          {detail: 'Account ID must be greater than zero.', ...errorObj}
+        )
       }
     );
   
@@ -65,53 +60,38 @@ describe('TicketService', () => {
     }
     
     it('throws error when no ticketTypeRequest', () => {
-      expect.assertions(1);
-      try{
-        ticketService.purchaseTickets(1234)
-      } catch (err) {
-        expect(err).toEqual({detail: 'No tickets requested.', ...errorObj})
-      }
+      expect(ticketService.purchaseTickets(VALID_ACCOUNT_ID)).toEqual(
+        {detail: 'No tickets requested.', ...errorObj}
+      )
     });
 
     it('throws error when total ticket number is zero', () => {
-      expect.assertions(1);
-      try{
-        ticketService.purchaseTickets(1234, {ADULT: 0})
-      } catch (err) {
-        expect(err).toEqual({detail: 'Cannot request zero tickets.', ...errorObj})
-      }
+      expect(ticketService.purchaseTickets(VALID_ACCOUNT_ID, {ADULT: 0})).toEqual(
+        {detail: 'Cannot request zero tickets.', ...errorObj}
+      )
     });
 
     it('throws an error if less adults than infants', () => {
-      expect.assertions(1);
-      try{
-        ticketService.purchaseTickets(1234,  {ADULT: 1}, {INFANT: 4})
-      } catch (err) {
-        expect(err).toEqual({detail: 'Must be one adult per infant ticket purchased.', ...errorObj})
-      }
+      expect(ticketService.purchaseTickets(VALID_ACCOUNT_ID, {ADULT: 1}, {INFANT: 4}))
+      .toEqual({detail: 'Must be one adult per infant ticket purchased.', ...errorObj})
     });
 
     it('throws error if children without adults', () => {
-      expect.assertions(1);
-      try{
-        ticketService.purchaseTickets(1234, {CHILD: 1})
-      } catch (err) {
-        expect(err).toEqual({detail: 'A child must be accompanied by an adult.', ...errorObj})
-      }
+      expect(ticketService.purchaseTickets(VALID_ACCOUNT_ID, {CHILD: 1})).toEqual(
+        {detail: 'A child must be accompanied by an adult.', ...errorObj}
+      )
     });
 
     it.each([
       [{ADULT: 26}, {CHILD: 0}],
       [{ADULT: 15}, {CHILD: 15}],
+      [{ADULT: 9007199254740991}, {CHILD: 9007199254740991}], //max value of integer
     ])(
       'throws error if ticket total exceeds 25',
       (adultTickets, childTickets) => {
-        expect.assertions(1);
-        try{
-          ticketService.purchaseTickets(1234, adultTickets, childTickets)
-        } catch (err) {
-          expect(err).toEqual({detail: 'Total ticket number cannot exceed 25.', ...errorObj})
-        }
+        expect(ticketService.purchaseTickets(VALID_ACCOUNT_ID, adultTickets, childTickets)).toEqual(
+          {detail: 'Total ticket number cannot exceed 25.', ...errorObj}
+        )
       }
     );
 
@@ -121,12 +101,15 @@ describe('TicketService', () => {
     ])(
       'handles TicketTypeRequest errors',
       (tickets, errorMessage) => {
-        expect.assertions(1);
-        try{
-          ticketService.purchaseTickets(1234, tickets)
-        } catch (err) {
-          expect(err).toEqual({detail: errorMessage, ...errorObj})
-        }
+        expect(ticketService.purchaseTickets(VALID_ACCOUNT_ID, tickets)).toEqual(
+          {detail: errorMessage, ...errorObj}
+        )
+        // expect.assertions(1);
+        // try{
+        //   ticketService.purchaseTickets(1234, tickets)
+        // } catch (err) {
+        //   expect(err).toEqual({detail: errorMessage, ...errorObj})
+        // }
       }
     );
   });

@@ -4,8 +4,8 @@ export default class InvalidPurchaseException extends Error {
   #errorMessage;
 
   constructor(name, status, message){
-    super()
-    this.#errorName = name
+    super();
+    this.#errorName = name;
     this.#errorStatus = status;
     this.#errorMessage = message;
   }
@@ -15,7 +15,7 @@ export default class InvalidPurchaseException extends Error {
       statusCode: this.#errorStatus,
       type: this.#errorName,
       title: 'An error occured',
-      detail: this.#errorMessage
+      detail: this.#errorMessage,
     }
     
     return errorObj;
