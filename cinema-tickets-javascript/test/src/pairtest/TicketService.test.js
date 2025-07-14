@@ -1,4 +1,3 @@
-import InvalidPurchaseException from '../../../src/pairtest/lib/InvalidPurchaseException';
 import TicketService from '../../../src/pairtest/TicketService';
 
 describe('TicketService', () => {
@@ -16,40 +15,6 @@ describe('TicketService', () => {
       .toEqual({status: 201, message: 'Thank you for your order.'});
       expect(ticketService.purchaseTickets(VALID_ACCOUNT_ID, {ADULT: 1}, {CHILD: 0}, {INFANT: 1}))
       .toEqual({status: 201, message: 'Thank you for your order.'});
-  });
-
-  describe('validateAccountId', () => {
-    let errorObj = {
-      statusCode: 400,
-      type: 'validateAccountId',
-      title: "An error occured",
-    }
-
-    it.each([
-      ['a'],
-      [NaN],
-      [{}]
-    ])(
-      'throws error when accountId not a number',
-      (invalidAccountId) => {
-        expect(ticketService.purchaseTickets(invalidAccountId, {ADULT: 1})).toEqual(
-          {detail: 'Account ID must be a number.', ...errorObj}
-        )
-      }
-    );
-  
-    it.each([
-      [0],
-      [-10]
-    ])(
-      'throws an error when accountId less than one',
-      (invalidAccountId) => {
-        expect(ticketService.purchaseTickets(invalidAccountId, {ADULT: 1})).toEqual(
-          {detail: 'Account ID must be greater than zero.', ...errorObj}
-        )
-      }
-    );
-  
   });
 
   describe('validateTicketTypeRequest', () => { 
@@ -104,12 +69,6 @@ describe('TicketService', () => {
         expect(ticketService.purchaseTickets(VALID_ACCOUNT_ID, tickets)).toEqual(
           {detail: errorMessage, ...errorObj}
         )
-        // expect.assertions(1);
-        // try{
-        //   ticketService.purchaseTickets(1234, tickets)
-        // } catch (err) {
-        //   expect(err).toEqual({detail: errorMessage, ...errorObj})
-        // }
       }
     );
   });

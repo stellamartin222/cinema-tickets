@@ -1,6 +1,7 @@
 import TicketTypeRequest from './lib/TicketTypeRequest.js';
 import InvalidPurchaseException from './lib/InvalidPurchaseException.js';
 import TicketPriceCalculator from '../services/ticketcalculator/TicketPriceCalculatorService.js';
+import AccountValidationService from '../services/validation/AccountValidationService.js';
 
 export default class TicketService {
   /**
@@ -18,8 +19,9 @@ export default class TicketService {
   }}
 
   purchaseTickets(accountId, ...ticketTypeRequests) {
+    let accountValidationService = new AccountValidationService(accountId);
     try{
-      this.#validateAccountId(accountId)
+      accountValidationService.validateAccountId();
       this.#validateTicketTypeRequests(ticketTypeRequests)
     } catch(err){
       return err.globalExceptionHandler()
@@ -28,19 +30,6 @@ export default class TicketService {
     return {status: 201, message: 'Thank you for your order.'}
   }
 
-  #validateAccountId(accountId) {
-    let errorName = 'validateAccountId';
-
-    if(isNaN(accountId)){
-      throw new InvalidPurchaseException(errorName, 400, 'Account ID must be a number.')
-    } else if (accountId <= 0){
-      throw new InvalidPurchaseException(errorName, 400, 'Account ID must be greater than zero.')
-    }
-    //In a production system there would be an aditional check to confirm the 
-    //account number exists, in valid ect. but this is outside of the scope of this tech test.
-  }
-
-  
   #validateTicketTypeRequests(ticketTypeRequests) {
     let errorName = 'validateTicketTypeRequest';
 
