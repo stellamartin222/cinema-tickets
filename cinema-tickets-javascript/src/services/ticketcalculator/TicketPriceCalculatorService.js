@@ -10,6 +10,7 @@ export default class TicketPriceCalculator{
 
     total += (ticketRequest.getNoOfAdultTickets() * this.#ticketPrices.ADULT);
     total += (ticketRequest.getNoOfChildTickets() * this.#ticketPrices.CHILD);
+    total += (ticketRequest.getNoOfInfantTickets() * this.#ticketPrices.INFANT);
 
     return total
   }
