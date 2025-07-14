@@ -14,4 +14,12 @@ describe('TicketPriceCalculator', () => {
     ticketRequest.addNoOfAdultTickets(1);
     expect(ticketPriceCalculator.calculate(ticketRequest)).toBe(TICKET_PRICES.ADULT)
   });
+
+  it('returns the total for adult and child request ', () => {
+    let ticketRequest = new TicketRequest()
+    ticketRequest.addNoOfAdultTickets(1);
+    ticketRequest.addNoOfChildTickets(1);
+    expect(ticketPriceCalculator.calculate(ticketRequest))
+    .toBe(TICKET_PRICES.ADULT + TICKET_PRICES.CHILD)
+  });
 });
