@@ -7,9 +7,12 @@ export default class TicketService {
    * Should only have private methods other than the one below.
    */
 
+  #TICKET_PRICES = {ADULT: 25, CHILD: 15, INFANT: 0}
+
   purchaseTickets(accountId, ...ticketTypeRequests) {
     let accountValidationService = new AccountValidationService();
     let ticketValidationService = new TicketValidationService();
+    let ticketPriceCalculator = new TicketPriceCalculator(this.#TICKET_PRICES);
     let ticketRequest;
 
     try{
@@ -18,8 +21,9 @@ export default class TicketService {
     } catch(err){
       return err.globalExceptionHandler()
     }
-    console.log(ticketRequest)
-    // TicketPriceCalculator(ticketRequest);
+     
+    let totalOrderCost = ticketPriceCalculator.calculate(ticketRequest);
+    
     return {status: 201, message: 'Thank you for your order.'}
   }
 }

@@ -20,13 +20,12 @@ describe('validateTicketTypeRequest', () => {
 
   it('returns 200 and one adult ticket for a valid ticket request', () => {
     let result = ticketValidationService.validateTickets([{ADULT: 1}]);
-    expect(result.status).toEqual(200)
-    expect(result.ticketRequest).toBeInstanceOf(TicketRequest)
-    expect(result.ticketRequest.getNoOfAdultTickets()).toBe(1)
-    expect(result.ticketRequest.getNoOfChildTickets()).toBe(0)
-    expect(result.ticketRequest.getNoOfInfantTickets()).toBe(0)
-    expect(result.ticketRequest.getTotalNoOfTickets()).toBe(1)
-    expect(result.ticketRequest.getTotalNoOfSeats()).toBe(1)
+    expect(result).toBeInstanceOf(TicketRequest)
+    expect(result.getNoOfAdultTickets()).toBe(1)
+    expect(result.getNoOfChildTickets()).toBe(0)
+    expect(result.getNoOfInfantTickets()).toBe(0)
+    expect(result.getTotalNoOfTickets()).toBe(1)
+    expect(result.getTotalNoOfSeats()).toBe(1)
   });
   
   it('throws error when no ticketTypeRequest', () => {

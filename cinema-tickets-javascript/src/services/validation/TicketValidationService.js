@@ -58,7 +58,7 @@ export default class TicketValidationService{
       return new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'A child must be accompanied by an adult.')
     }
 
-    return {status: 200, ticketRequest: this.#ticketRequest}
+    return this.#ticketRequest
   }
 
   #isTicketRequestsUndefined(ticketRequests){{
