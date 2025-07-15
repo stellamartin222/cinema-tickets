@@ -5,9 +5,9 @@ export default class AccountValidationService {
     let errorName = 'validateAccountId';
 
     if(isNaN(accountId) || !Number.isInteger(accountId)){
-      return new InvalidPurchaseException(errorName, 400, 'Account ID must be a number.')
+      throw new InvalidPurchaseException(errorName, 400, 'Account ID must be a number.')
     } else if (accountId <= 0){
-      return new InvalidPurchaseException(errorName, 400, 'Account ID must be greater than zero.')
+      throw new InvalidPurchaseException(errorName, 400, 'Account ID must be greater than zero.')
     }
 
     this.#accountService()

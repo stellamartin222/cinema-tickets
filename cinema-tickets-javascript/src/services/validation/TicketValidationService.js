@@ -16,7 +16,7 @@ export default class TicketValidationService{
   validateTickets(ticketRequests){
 
     if(this.#isTicketRequestsUndefined(ticketRequests)){
-      return new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'No tickets requested.')
+      throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'No tickets requested.')
     }
 
     ticketRequests.forEach(ticket =>{{
@@ -27,9 +27,9 @@ export default class TicketValidationService{
         new TicketTypeRequest(type, noOfTickets)
       } catch (err) {
         if(err.message === 'type must be ADULT, CHILD, or INFANT'){
-          return new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Ticket type must be ADULT, CHILD or INFANT.')
+          throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Ticket type must be ADULT, CHILD or INFANT.')
         } else {
-          return new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Number of tickets must be an integer.')
+          throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Number of tickets must be an integer.')
         }
       }
 
@@ -47,15 +47,15 @@ export default class TicketValidationService{
     }})
 
     if(this.#isTotalOrderLessThanOne()){
-      return new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Cannot request zero tickets.')
+      throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Cannot request zero tickets.')
     } else if (this.#isTotalOrderMoreThanTwentyFive()){
-      return new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Total ticket number cannot exceed 25.')
+      throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Total ticket number cannot exceed 25.')
     }
     
     if(this.#ticketRequest.getNoOfAdultTickets() < this.#ticketRequest.getNoOfInfantTickets()){
-      return new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Must be one adult per infant ticket purchased.')
+      throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Must be one adult per infant ticket purchased.')
     } else if(this.#ticketRequest.getNoOfAdultTickets() < this.#ticketRequest.getNoOfChildTickets()){ 
-      return new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'A child must be accompanied by an adult.')
+      throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'A child must be accompanied by an adult.')
     }
 
     return this.#ticketRequest

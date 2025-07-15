@@ -19,17 +19,13 @@ describe('Utils', () => {
     ])(
     'catches errors thrown by ticket payment service',
     async (accountId, totalOrderPrice, errMessage) => {
-      let error;
-
       try {
         utils.callTicketPaymentService(accountId, totalOrderPrice);
       } catch (err) {
-        error = err;
+        expect(err.globalExceptionHandler().type).toBe('callTicketPaymentService');
+        expect(err.globalExceptionHandler().statusCode).toBe(errStatus);
+        expect(err.globalExceptionHandler().detail).toBe(`Ticket payment service error: ${errMessage}`);
       }
-
-      expect(error.globalExceptionHandler().type).toBe('callTicketPaymentService');
-      expect(error.globalExceptionHandler().statusCode).toBe(errStatus);
-      expect(error.globalExceptionHandler().detail).toBe(`Ticket payment service error: ${errMessage}`);
     }
   );
 
@@ -43,17 +39,13 @@ describe('Utils', () => {
     ])(
     'catches errors thrown by seat reservation service',
     async (accountId, totalSeatsToAllocate, errMessage) => {
-      let error;
-
       try {
         utils.callSeatReservationService(accountId, totalSeatsToAllocate);
       } catch (err) {
-        error = err;
+        expect(err.globalExceptionHandler().type).toBe('callSeatReservationService');
+        expect(err.globalExceptionHandler().statusCode).toBe(errStatus);
+        expect(err.globalExceptionHandler().detail).toBe(`Seat reservation service error: ${errMessage}`);
       }
-
-      expect(error.globalExceptionHandler().type).toBe('callSeatReservationService');
-      expect(error.globalExceptionHandler().statusCode).toBe(errStatus);
-      expect(error.globalExceptionHandler().detail).toBe(`Seat reservation service error: ${errMessage}`);
     }
   );
 });

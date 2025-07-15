@@ -1,7 +1,8 @@
 import AccountValidationService from "../../../../src/services/validation/AccountValidationService";
-import mockInvalidPurchaseException from "../../../../src/pairtest/lib/InvalidPurchaseException";
+// import mockInvalidPurchaseException from "../../../../src/pairtest/lib/InvalidPurchaseException";
+import InvalidPurchaseException from "../../../../src/pairtest/lib/InvalidPurchaseException";
 
-jest.mock('../../../../src/pairtest/lib/InvalidPurchaseException', () => jest.fn());
+// jest.mock('../../../../src/pairtest/lib/InvalidPurchaseException', () => jest.fn());
 
 describe('validateAccountId', () => {
   const ERROR_NAME = 'validateAccountId';
@@ -12,10 +13,6 @@ describe('validateAccountId', () => {
   beforeEach(async () => {
       accountValidationService = new AccountValidationService;
   });
-  
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
 
   it('returns 200 for a valid accountId', () => {
     expect(accountValidationService.validateAccountId(1234)).toEqual({status: 200})
@@ -29,10 +26,16 @@ describe('validateAccountId', () => {
   ])(
     'throws error when accountId not a number',
     (invalidAccountId) => {
-      accountValidationService.validateAccountId(invalidAccountId)
-    
-      expect(mockInvalidPurchaseException)
-      .toHaveBeenCalledWith(ERROR_NAME, ERROR_STATUS, 'Account ID must be a number.')
+      expect(() => accountValidationService.validateAccountId(invalidAccountId))
+      .toThrow(InvalidPurchaseException)
+      
+      try {
+        accountValidationService.validateAccountId(invalidAccountId)
+      } catch (err) {
+        expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
+        expect(err.globalExceptionHandler().statusCode).toBe(ERROR_STATUS);
+        expect(err.globalExceptionHandler().detail).toBe('Account ID must be a number.');
+      }
     }
   );
 
@@ -42,10 +45,16 @@ describe('validateAccountId', () => {
   ])(
     'throws an error when accountId less than one',
     (invalidAccountId) => {
-      accountValidationService.validateAccountId(invalidAccountId)
-
-      expect(mockInvalidPurchaseException)
-      .toHaveBeenCalledWith(ERROR_NAME, ERROR_STATUS, 'Account ID must be greater than zero.')
+      expect(() => accountValidationService.validateAccountId(invalidAccountId))
+      .toThrow(InvalidPurchaseException)
+      
+      try {
+        accountValidationService.validateAccountId(invalidAccountId)
+      } catch (err) {
+        expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
+        expect(err.globalExceptionHandler().statusCode).toBe(ERROR_STATUS);
+        expect(err.globalExceptionHandler().detail).toBe('Account ID must be greater than zero.');
+      }
     }
   );
 });
