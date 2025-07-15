@@ -1,3 +1,4 @@
+import SeatCalculator from '../services/seatcalculator/SeatCalculator.js';
 import TicketPriceCalculator from '../services/ticketcalculator/TicketPriceCalculatorService.js';
 import AccountValidationService from '../services/validation/AccountValidationService.js';
 import TicketValidationService from '../services/validation/TicketValidationService.js';
@@ -14,6 +15,7 @@ export default class TicketService {
     let accountValidationService = new AccountValidationService();
     let ticketValidationService = new TicketValidationService();
     let ticketPriceCalculator = new TicketPriceCalculator(this.#TICKET_PRICES);
+    let seatCalculator = new SeatCalculator();
     let ticketRequest;
 
     try{
@@ -25,6 +27,7 @@ export default class TicketService {
      
     let totalOrderCost = ticketPriceCalculator.calculate(ticketRequest);
     new TicketPaymentService(accountId, totalOrderCost);
+    let totalSeatNo = seatCalculator.calculate(ticketRequest);
 
     return {status: 201, message: 'Thank you for your order.'}
   }

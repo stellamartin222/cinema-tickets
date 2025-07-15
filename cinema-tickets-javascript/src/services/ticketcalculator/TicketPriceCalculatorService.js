@@ -6,12 +6,12 @@ export default class TicketPriceCalculator{
   }
 
   calculate(ticketRequest){
-    let total = 0
+    let total = 0;
 
     total += (ticketRequest.getNoOfAdultTickets() * this.#ticketPrices.ADULT);
     total += (ticketRequest.getNoOfChildTickets() * this.#ticketPrices.CHILD);
     total += (ticketRequest.getNoOfInfantTickets() * this.#ticketPrices.INFANT);
 
-    return total
+    return total;
   }
 }
