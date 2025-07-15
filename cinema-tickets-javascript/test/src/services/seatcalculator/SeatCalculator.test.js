@@ -13,4 +13,11 @@ describe('SeatCalculator', () => {
     ticketRequest.addNoOfAdultTickets(1);
     expect(seatCalculator.calculate(ticketRequest)).toBe(1)
   });
+
+  it('returns total seat number for multiple tickets', () => {
+    let ticketRequest = new TicketRequest();
+    ticketRequest.addNoOfAdultTickets(1);
+    ticketRequest.addNoOfChildTickets(2);
+    expect(seatCalculator.calculate(ticketRequest)).toBe(3)
+  });
 });
