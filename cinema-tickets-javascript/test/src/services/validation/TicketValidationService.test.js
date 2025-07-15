@@ -5,12 +5,12 @@ import TicketTypeRequest from "../../../../src/pairtest/lib/TicketTypeRequest";
 
 describe('validateTicketTypeRequest', () => { 
   const ERROR_NAME = 'validateTicketTypeRequest';
-  const ERROR_STATUS = 400;
+  const MAX_SEAT_TOTAL = 25;
 
   let ticketValidationService;
   
   beforeEach(async () => {
-      ticketValidationService = new TicketValidationService;
+      ticketValidationService = new TicketValidationService(MAX_SEAT_TOTAL);
   });
 
   it('returns 200 and one adult ticket for a valid ticket request', () => {
@@ -31,7 +31,6 @@ describe('validateTicketTypeRequest', () => {
         ticketValidationService.validateTickets()
       } catch (err) {
         expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-        expect(err.globalExceptionHandler().statusCode).toBe(ERROR_STATUS);
         expect(err.globalExceptionHandler().detail).toBe('No tickets requested.');
       }
   });
@@ -45,7 +44,6 @@ describe('validateTicketTypeRequest', () => {
         ticketValidationService.validateTickets([new TicketTypeRequest('ADULT', 0)])
       } catch (err) {
         expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-        expect(err.globalExceptionHandler().statusCode).toBe(ERROR_STATUS);
         expect(err.globalExceptionHandler().detail).toBe('Cannot request zero tickets.');
       }
   });
@@ -64,7 +62,6 @@ describe('validateTicketTypeRequest', () => {
       ])
     } catch (err) {
       expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-      expect(err.globalExceptionHandler().statusCode).toBe(ERROR_STATUS);
       expect(err.globalExceptionHandler().detail).toBe('Must be one adult per infant ticket purchased.');
     }
   });
@@ -77,7 +74,6 @@ describe('validateTicketTypeRequest', () => {
       ticketValidationService.validateTickets([new TicketTypeRequest('CHILD', 1)])
     } catch (err) {
       expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-      expect(err.globalExceptionHandler().statusCode).toBe(ERROR_STATUS);
       expect(err.globalExceptionHandler().detail).toBe('A child must be accompanied by an adult.');
     }
   });
@@ -96,7 +92,6 @@ describe('validateTicketTypeRequest', () => {
         ticketValidationService.validateTickets([adultTickets, childTickets])
       } catch (err) {
         expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-        expect(err.globalExceptionHandler().statusCode).toBe(ERROR_STATUS);
         expect(err.globalExceptionHandler().detail).toBe('Total ticket number cannot exceed 25.');
       }
     }

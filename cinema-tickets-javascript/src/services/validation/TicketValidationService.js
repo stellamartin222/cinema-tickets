@@ -1,22 +1,21 @@
 import InvalidPurchaseException from "../../pairtest/lib/InvalidPurchaseException";
-import TicketTypeRequest from "../../pairtest/lib/TicketTypeRequest";
 import TicketRequest from "../../pairtest/lib/TicketRequest";
 
 export default class TicketValidationService{
-  #ERROR_NAME;
-  #ERROR_STATUS;
+  #errorName;
+  #maxSeatTotal;
   #ticketRequest;
 
-  constructor(){
-    this.#ERROR_NAME = 'validateTicketTypeRequest';
-    this.#ERROR_STATUS = 400;
+  constructor(maxSeatTotal){
+    this.#errorName = 'validateTicketTypeRequest';
+    this.#maxSeatTotal = maxSeatTotal;
     this.#ticketRequest = new TicketRequest();
   }
 
   validateTickets(ticketRequests){
 
     if(this.#isTicketRequestsUndefined(ticketRequests)){
-      throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'No tickets requested.')
+      throw new InvalidPurchaseException(this.#errorName, 'No tickets requested.');
     }
 
     ticketRequests.forEach(ticket =>{{
@@ -38,15 +37,15 @@ export default class TicketValidationService{
     }})
 
     if(this.#isTotalOrderLessThanOne()){
-      throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Cannot request zero tickets.')
-    } else if (this.#isTotalOrderMoreThanTwentyFive()){
-      throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Total ticket number cannot exceed 25.')
+      throw new InvalidPurchaseException(this.#errorName, 'Cannot request zero tickets.')
+    } else if (this.#isTotalOrderMoreThanMax()){
+      throw new InvalidPurchaseException(this.#errorName, 'Total ticket number cannot exceed 25.')
     }
     
     if(this.#ticketRequest.getNoOfAdultTickets() < this.#ticketRequest.getNoOfInfantTickets()){
-      throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Must be one adult per infant ticket purchased.')
+      throw new InvalidPurchaseException(this.#errorName, 'Must be one adult per infant ticket purchased.')
     } else if(this.#ticketRequest.getNoOfAdultTickets() < this.#ticketRequest.getNoOfChildTickets()){ 
-      throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'A child must be accompanied by an adult.')
+      throw new InvalidPurchaseException(this.#errorName, 'A child must be accompanied by an adult.')
     }
 
     return this.#ticketRequest
@@ -60,7 +59,7 @@ export default class TicketValidationService{
     return this.#ticketRequest.getTotalNoOfTickets() <= 0 ? true : false;
   }
 
-  #isTotalOrderMoreThanTwentyFive(){
-    return this.#ticketRequest.getTotalNoOfTickets() > 25 ? true : false
+  #isTotalOrderMoreThanMax(){
+    return this.#ticketRequest.getTotalNoOfTickets() > this.#maxSeatTotal ? true : false
   }
 }

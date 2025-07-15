@@ -1,12 +1,8 @@
 import AccountValidationService from "../../../../src/services/validation/AccountValidationService";
-// import mockInvalidPurchaseException from "../../../../src/pairtest/lib/InvalidPurchaseException";
 import InvalidPurchaseException from "../../../../src/pairtest/lib/InvalidPurchaseException";
-
-// jest.mock('../../../../src/pairtest/lib/InvalidPurchaseException', () => jest.fn());
 
 describe('validateAccountId', () => {
   const ERROR_NAME = 'validateAccountId';
-  const ERROR_STATUS = 400;
 
   let accountValidationService;
   
@@ -33,7 +29,6 @@ describe('validateAccountId', () => {
         accountValidationService.validateAccountId(invalidAccountId)
       } catch (err) {
         expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-        expect(err.globalExceptionHandler().statusCode).toBe(ERROR_STATUS);
         expect(err.globalExceptionHandler().detail).toBe('Account ID must be a number.');
       }
     }
@@ -52,7 +47,6 @@ describe('validateAccountId', () => {
         accountValidationService.validateAccountId(invalidAccountId)
       } catch (err) {
         expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-        expect(err.globalExceptionHandler().statusCode).toBe(ERROR_STATUS);
         expect(err.globalExceptionHandler().detail).toBe('Account ID must be greater than zero.');
       }
     }

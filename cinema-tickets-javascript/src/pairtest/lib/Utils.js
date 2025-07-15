@@ -11,7 +11,6 @@ export default class Utils{
     } catch (error) {
       throw new InvalidPurchaseException(
         'callTicketPaymentService',
-        400,
         `Ticket payment service error: ${error}`
       );
     }
@@ -24,7 +23,6 @@ export default class Utils{
     } catch (error) {
       throw new InvalidPurchaseException(
         'callSeatReservationService',
-        400,
         `Seat reservation service error: ${error}`
       );
     }

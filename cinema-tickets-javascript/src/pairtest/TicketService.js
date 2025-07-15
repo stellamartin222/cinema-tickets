@@ -10,10 +10,11 @@ export default class TicketService {
    */
 
   #TICKET_PRICES = {ADULT: 25, CHILD: 15, INFANT: 0}
+  #MAX_SEAT_TOTAL = 25;
 
   purchaseTickets(accountId, ...ticketTypeRequests) {
     let accountValidationService = new AccountValidationService();
-    let ticketValidationService = new TicketValidationService();
+    let ticketValidationService = new TicketValidationService(this.#MAX_SEAT_TOTAL);
     let ticketPriceCalculator = new TicketPriceCalculator(this.#TICKET_PRICES);
     let utils = new Utils();
     let seatCalculator = new SeatCalculator();

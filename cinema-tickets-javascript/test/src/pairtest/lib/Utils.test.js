@@ -2,8 +2,6 @@ import Utils from "../../../../src/pairtest/lib/Utils";
 
 describe('Utils', () => {
   let utils;
-  let errStatus = 400
-  
   
   beforeEach(async () => {
     utils = new Utils
@@ -23,7 +21,6 @@ describe('Utils', () => {
         utils.callTicketPaymentService(accountId, totalOrderPrice);
       } catch (err) {
         expect(err.globalExceptionHandler().type).toBe('callTicketPaymentService');
-        expect(err.globalExceptionHandler().statusCode).toBe(errStatus);
         expect(err.globalExceptionHandler().detail).toBe(`Ticket payment service error: ${errMessage}`);
       }
     }
@@ -43,7 +40,6 @@ describe('Utils', () => {
         utils.callSeatReservationService(accountId, totalSeatsToAllocate);
       } catch (err) {
         expect(err.globalExceptionHandler().type).toBe('callSeatReservationService');
-        expect(err.globalExceptionHandler().statusCode).toBe(errStatus);
         expect(err.globalExceptionHandler().detail).toBe(`Seat reservation service error: ${errMessage}`);
       }
     }
