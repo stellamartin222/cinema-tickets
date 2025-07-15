@@ -1,6 +1,7 @@
 import TicketPriceCalculator from '../services/ticketcalculator/TicketPriceCalculatorService.js';
 import AccountValidationService from '../services/validation/AccountValidationService.js';
 import TicketValidationService from '../services/validation/TicketValidationService.js';
+import TicketPaymentService from '../thirdparty/paymentgateway/TicketPaymentService.js';
 
 export default class TicketService {
   /**
@@ -23,7 +24,8 @@ export default class TicketService {
     }
      
     let totalOrderCost = ticketPriceCalculator.calculate(ticketRequest);
-    
+    new TicketPaymentService(accountId, totalOrderCost);
+
     return {status: 201, message: 'Thank you for your order.'}
   }
 }
