@@ -19,7 +19,7 @@ export default class Utils{
   callSeatReservationService(accountId, totalSeatsToAllocate){
     try {
       let seatReservationService = new SeatReservationService();
-      seatReservationService.reserveSeat(accountId, totalSeatsToAllocate)
+      seatReservationService.reserveSeat(accountId, totalSeatsToAllocate);
     } catch (error) {
       throw new InvalidPurchaseException(
         'callSeatReservationService',

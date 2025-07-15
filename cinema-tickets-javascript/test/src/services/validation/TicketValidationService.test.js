@@ -74,8 +74,15 @@ describe('validateTicketTypeRequest', () => {
       ticketValidationService.validateTickets([new TicketTypeRequest('CHILD', 1)])
     } catch (err) {
       expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-      expect(err.globalExceptionHandler().detail).toBe('A child must be accompanied by an adult.');
+      expect(err.globalExceptionHandler().detail).toBe('Children must be accompanied by at least one adult.');
     }
+  });
+
+  it('returns 200 if at least one adult accompanies multiple child tickets', () => {
+    expect(ticketValidationService.validateTickets([
+      new TicketTypeRequest('ADULT', 1),
+      new TicketTypeRequest('CHILD', 4)
+    ])).toBeInstanceOf(TicketRequest)
   });
 
   it.each([

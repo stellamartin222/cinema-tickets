@@ -44,8 +44,8 @@ export default class TicketValidationService{
     
     if(this.#ticketRequest.getNoOfAdultTickets() < this.#ticketRequest.getNoOfInfantTickets()){
       throw new InvalidPurchaseException(this.#errorName, 'Must be one adult per infant ticket purchased.')
-    } else if(this.#ticketRequest.getNoOfAdultTickets() < this.#ticketRequest.getNoOfChildTickets()){ 
-      throw new InvalidPurchaseException(this.#errorName, 'A child must be accompanied by an adult.')
+    } else if(this.#ticketRequest.getNoOfChildTickets() > 0 && this.#ticketRequest.getNoOfAdultTickets() === 0){ 
+      throw new InvalidPurchaseException(this.#errorName, 'Children must be accompanied by at least one adult.')
     }
 
     return this.#ticketRequest

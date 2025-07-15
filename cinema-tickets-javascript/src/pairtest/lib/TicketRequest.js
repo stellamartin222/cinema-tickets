@@ -8,7 +8,7 @@ export default class TicketRequest {
   }
 
   addNoOfAdultTickets(noOfTickets){
-    this.#noOfAdultTickets += noOfTickets
+    this.#noOfAdultTickets += noOfTickets;
   }
 
   getNoOfChildTickets(){
@@ -16,7 +16,7 @@ export default class TicketRequest {
   }
 
   addNoOfChildTickets(noOfTickets){
-    this.#noOfChildTickets += noOfTickets
+    this.#noOfChildTickets += noOfTickets;
   }
 
   getNoOfInfantTickets(){
@@ -24,7 +24,7 @@ export default class TicketRequest {
   }
 
   addNoOfInfantTickets(noOfTickets){
-    this.#noOfInfantTickets += noOfTickets
+    this.#noOfInfantTickets += noOfTickets;
   }
 
   getTotalNoOfTickets(){
