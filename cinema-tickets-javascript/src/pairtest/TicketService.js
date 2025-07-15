@@ -2,7 +2,7 @@ import SeatCalculator from '../services/seatcalculator/SeatCalculator.js';
 import TicketPriceCalculator from '../services/ticketcalculator/TicketPriceCalculatorService.js';
 import AccountValidationService from '../services/validation/AccountValidationService.js';
 import TicketValidationService from '../services/validation/TicketValidationService.js';
-import TicketPaymentService from '../thirdparty/paymentgateway/TicketPaymentService.js';
+import Utils from './lib/Utils.js';
 
 export default class TicketService {
   /**
@@ -15,20 +15,23 @@ export default class TicketService {
     let accountValidationService = new AccountValidationService();
     let ticketValidationService = new TicketValidationService();
     let ticketPriceCalculator = new TicketPriceCalculator(this.#TICKET_PRICES);
+    let utils = new Utils();
     let seatCalculator = new SeatCalculator();
     let ticketRequest;
 
     try{
       accountValidationService.validateAccountId(accountId);
       ticketRequest = ticketValidationService.validateTickets(ticketTypeRequests);
-    } catch(err){
-      return err.globalExceptionHandler()
-    }
-     
-    let totalOrderCost = ticketPriceCalculator.calculate(ticketRequest);
-    new TicketPaymentService(accountId, totalOrderCost);
-    let totalSeatNo = seatCalculator.calculate(ticketRequest);
 
-    return {status: 201, message: 'Thank you for your order.'}
+      let totalOrderPrice = ticketPriceCalculator.calculate(ticketRequest);
+      utils.callTicketPaymentService(accountId, totalOrderPrice);
+
+      let totalSeatNo = seatCalculator.calculate(ticketRequest);
+      utils.callSeatReservationService(accountId, totalSeatNo);
+    } catch(err){
+      return err.globalExceptionHandler();
+    }
+
+    return {status: 201, message: 'Thank you for your order.'};
   }
 }
