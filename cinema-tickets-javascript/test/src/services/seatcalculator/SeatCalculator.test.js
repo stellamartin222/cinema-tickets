@@ -8,16 +8,23 @@ describe('SeatCalculator', () => {
     seatCalculator = new SeatCalculator()
   })
   
-  it('returns total seat number for one adult ticket', () => {
+  it('calculates seat number for one adult ticket', () => {
     let ticketRequest = new TicketRequest();
     ticketRequest.addNoOfAdultTickets(1);
     expect(seatCalculator.calculate(ticketRequest)).toBe(1)
   });
 
-  it('returns total seat number for multiple tickets', () => {
+  it('calculates seat number for multiple tickets', () => {
     let ticketRequest = new TicketRequest();
     ticketRequest.addNoOfAdultTickets(1);
     ticketRequest.addNoOfChildTickets(2);
     expect(seatCalculator.calculate(ticketRequest)).toBe(3)
+  });
+
+  it('does not include infants when calculating tickets', () => {
+    let ticketRequest = new TicketRequest();
+    ticketRequest.addNoOfAdultTickets(1);
+    ticketRequest.addNoOfInfantTickets(1);
+    expect(seatCalculator.calculate(ticketRequest)).toBe(1)
   });
 });
