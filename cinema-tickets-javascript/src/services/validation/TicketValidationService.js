@@ -20,18 +20,9 @@ export default class TicketValidationService{
     }
 
     ticketRequests.forEach(ticket =>{{
-      let type = Object.keys(ticket)[0];
-      let noOfTickets = ticket[type];
 
-      try{
-        new TicketTypeRequest(type, noOfTickets)
-      } catch (err) {
-        if(err.message === 'type must be ADULT, CHILD, or INFANT'){
-          throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Ticket type must be ADULT, CHILD or INFANT.')
-        } else {
-          throw new InvalidPurchaseException(this.#ERROR_NAME, this.#ERROR_STATUS, 'Number of tickets must be an integer.')
-        }
-      }
+      let type = ticket.getTicketType();
+      let noOfTickets = ticket.getNoOfTickets();
 
       switch (type) {
         case 'ADULT':
@@ -72,20 +63,4 @@ export default class TicketValidationService{
   #isTotalOrderMoreThanTwentyFive(){
     return this.#ticketRequest.getTotalNoOfTickets() > 25 ? true : false
   }
-
-  // #isTicketRequestPermitted(){
-  //   let errorMessage;
-    
-  //   if(this.#adultTickets < this.#infantTickets){
-  //     throw new InvalidPurchaseException(
-  //       errorName, 400, 'Must be one adult per infant ticket purchased.'
-  //     )
-  //   } else if(this.#adultTickets < this.#childTickets){ 
-  //     throw new InvalidPurchaseException(
-  //       errorName, 400, 'A child must be accompanied by an adult.'
-  //     )
-  //   }
-
-  //   return errorMessage
-  // }
 }

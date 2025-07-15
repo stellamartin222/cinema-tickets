@@ -10,7 +10,7 @@ export default class AccountValidationService {
       throw new InvalidPurchaseException(errorName, 400, 'Account ID must be greater than zero.')
     }
 
-    this.#accountService()
+    this.#accountService();
 
     return {status: 200};
   }
