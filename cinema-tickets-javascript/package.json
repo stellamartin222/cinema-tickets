@@ -8,13 +8,15 @@
   "type": "module",
   "scripts": {
     "test": "jest --coverage",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start": "node run.js"
   },
   "dependencies": {
     "eslint-plugin-prettier": "^5.5.1",
     "eslint-plugin-unused-imports": "^4.1.4",
     "jest": "^30.0.4",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",

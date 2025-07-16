@@ -1,21 +1,21 @@
-import InvalidPurchaseException from '../../pairtest/lib/InvalidPurchaseException';
-import TicketRequest from '../../pairtest/lib/TicketRequest';
-import { logger } from '../../pairtest/lib/logger';
+import InvalidPurchaseException from '../../pairtest/lib/InvalidPurchaseException.js';
+import TicketRequest from '../../pairtest/lib/TicketRequest.js';
+import { logger } from '../../pairtest/lib/logger.js';
 
 export default class TicketValidationService {
-  #serviceName;
   #maxSeatTotal;
   #ticketRequest;
 
   constructor(maxSeatTotal) {
-    this.#serviceName = 'validateTicketTypeRequest';
     this.#maxSeatTotal = maxSeatTotal;
     this.#ticketRequest = new TicketRequest();
   }
 
   validateTickets(ticketRequests) {
+    const serviceName = 'validateTicketTypeRequest';
+
     if (this.#isTicketRequestsUndefined(ticketRequests)) {
-      throw new InvalidPurchaseException(this.#serviceName, 'No tickets requested.');
+      throw new InvalidPurchaseException(serviceName, 'No tickets requested.');
     }
 
     ticketRequests.forEach((ticket) => {
@@ -36,17 +36,14 @@ export default class TicketValidationService {
     });
 
     if (this.#isTotalOrderLessThanOne()) {
-      throw new InvalidPurchaseException(this.#serviceName, 'Cannot request zero tickets.');
+      throw new InvalidPurchaseException(serviceName, 'Cannot request zero tickets.');
     } else if (this.#isTotalOrderMoreThanMax()) {
-      throw new InvalidPurchaseException(
-        this.#serviceName,
-        'Total ticket number cannot exceed 25.'
-      );
+      throw new InvalidPurchaseException(serviceName, 'Total ticket number cannot exceed 25.');
     }
 
     if (this.#ticketRequest.getNoOfAdultTickets() < this.#ticketRequest.getNoOfInfantTickets()) {
       throw new InvalidPurchaseException(
-        this.#serviceName,
+        serviceName,
         'Must be one adult per infant ticket purchased.'
       );
     } else if (
@@ -54,15 +51,15 @@ export default class TicketValidationService {
       this.#ticketRequest.getNoOfAdultTickets() === 0
     ) {
       throw new InvalidPurchaseException(
-        this.#serviceName,
+        serviceName,
         'Children must be accompanied by at least one adult.'
       );
     }
 
     logger.log('info', {
-      type: this.#serviceName,
+      type: serviceName,
       title: 'Success',
-      detail: `${this.#ticketRequest.getNoOfInfantTickets()} Adult, ${this.#ticketRequest.getNoOfInfantTickets()} Child and ${this.#ticketRequest.getNoOfInfantTickets()} Infant tickets validated`,
+      detail: `${this.#ticketRequest.getNoOfAdultTickets()} Adult, ${this.#ticketRequest.getNoOfChildTickets()} Child and ${this.#ticketRequest.getNoOfInfantTickets()} Infant tickets validated`,
     });
 
     return this.#ticketRequest;

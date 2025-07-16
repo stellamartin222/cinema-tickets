@@ -13,7 +13,8 @@ export default defineConfig([
       './babel.config.cjs',
       './src/pairtest/lib/TicketTypeRequest.js',
       './src/thirdparty/seatbooking/SeatReservationService.js',
-      './src/thirdparty/paymentgateway/TicketPaymentService.js'
+      './src/thirdparty/paymentgateway/TicketPaymentService.js',
+      './logs'
     ]
   },
   {

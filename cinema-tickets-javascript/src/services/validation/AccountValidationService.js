@@ -1,9 +1,9 @@
-import InvalidPurchaseException from '../../pairtest/lib/InvalidPurchaseException';
-import { logger } from '../../pairtest/lib/logger';
+import InvalidPurchaseException from '../../pairtest/lib/InvalidPurchaseException.js';
+import { logger } from '../../pairtest/lib/logger.js';
 
 export default class AccountValidationService {
   validateAccountId(accountId) {
-    let serviceName = 'validateAccountId';
+    const serviceName = 'validateAccountId';
 
     if (isNaN(accountId) || !Number.isInteger(accountId)) {
       throw new InvalidPurchaseException(serviceName, 'Account ID must be a number.');

@@ -2,6 +2,13 @@ import TicketValidationService from '../../../../src/services/validation/TicketV
 import InvalidPurchaseException from '../../../../src/pairtest/lib/InvalidPurchaseException';
 import TicketRequest from '../../../../src/pairtest/lib/TicketRequest';
 import TicketTypeRequest from '../../../../src/pairtest/lib/TicketTypeRequest';
+import { logger } from '../../../../src/pairtest/lib/logger';
+
+jest.mock('../../../../src/pairtest/lib/logger.js', () => ({
+  logger: {
+    log: jest.fn(),
+  },
+}));
 
 describe('validateTicketTypeRequest', () => {
   const ERROR_NAME = 'validateTicketTypeRequest';
@@ -9,7 +16,8 @@ describe('validateTicketTypeRequest', () => {
 
   let ticketValidationService;
 
-  beforeEach(async () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
     ticketValidationService = new TicketValidationService(MAX_SEAT_TOTAL);
   });
 
@@ -21,16 +29,28 @@ describe('validateTicketTypeRequest', () => {
     expect(result.getNoOfInfantTickets()).toBe(0);
     expect(result.getTotalNoOfTickets()).toBe(1);
     expect(result.getTotalNoOfSeats()).toBe(1);
+    expect(logger.log).toHaveBeenCalledTimes(1);
+    expect(logger.log).toHaveBeenCalledWith('info', {
+      type: 'validateTicketTypeRequest',
+      title: 'Success',
+      detail: '1 Adult, 0 Child and 0 Infant tickets validated',
+    });
   });
 
   it('throws error when no ticketTypeRequest', () => {
-    expect(() => ticketValidationService.validateTickets().toThrow(InvalidPurchaseException));
+    expect(() => ticketValidationService.validateTickets()).toThrow(InvalidPurchaseException);
 
     try {
       ticketValidationService.validateTickets();
     } catch (error) {
       expect(error.globalExceptionHandler().type).toBe(ERROR_NAME);
       expect(error.globalExceptionHandler().detail).toBe('No tickets requested.');
+      expect(logger.log).toHaveBeenCalledWith('error', {
+        statusCode: 400,
+        type: ERROR_NAME,
+        title: 'An error occured',
+        detail: 'No tickets requested.',
+      });
     }
   });
 
@@ -46,6 +66,12 @@ describe('validateTicketTypeRequest', () => {
     } catch (error) {
       expect(error.globalExceptionHandler().type).toBe(ERROR_NAME);
       expect(error.globalExceptionHandler().detail).toBe('Cannot request zero tickets.');
+      expect(logger.log).toHaveBeenCalledWith('error', {
+        statusCode: 400,
+        type: ERROR_NAME,
+        title: 'An error occured',
+        detail: 'Cannot request zero tickets.',
+      });
     }
   });
 
@@ -66,6 +92,12 @@ describe('validateTicketTypeRequest', () => {
       expect(error.globalExceptionHandler().detail).toBe(
         'Must be one adult per infant ticket purchased.'
       );
+      expect(logger.log).toHaveBeenCalledWith('error', {
+        statusCode: 400,
+        type: ERROR_NAME,
+        title: 'An error occured',
+        detail: 'Must be one adult per infant ticket purchased.',
+      });
     }
   });
 
@@ -83,6 +115,12 @@ describe('validateTicketTypeRequest', () => {
       expect(error.globalExceptionHandler().detail).toBe(
         'Children must be accompanied by at least one adult.'
       );
+      expect(logger.log).toHaveBeenCalledWith('error', {
+        statusCode: 400,
+        type: ERROR_NAME,
+        title: 'An error occured',
+        detail: 'Children must be accompanied by at least one adult.',
+      });
     }
   });
 
@@ -114,6 +152,12 @@ describe('validateTicketTypeRequest', () => {
     } catch (error) {
       expect(error.globalExceptionHandler().type).toBe(ERROR_NAME);
       expect(error.globalExceptionHandler().detail).toBe('Total ticket number cannot exceed 25.');
+      expect(logger.log).toHaveBeenCalledWith('error', {
+        statusCode: 400,
+        type: ERROR_NAME,
+        title: 'An error occured',
+        detail: 'Total ticket number cannot exceed 25.',
+      });
     }
   });
 });

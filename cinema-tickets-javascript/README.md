@@ -27,6 +27,7 @@ Candidate number : 14546039
 - [Run Cinema Tickets Javascript](#run-cinema-tickets-javascript)
 - [Test Suite](#test-suite)
 - [Linting](#linting)
+- [Notes](#notes)
 
 ## Pre-requisites
 
@@ -41,6 +42,11 @@ npm install
 ```shell
 npm start
 ```
+To run this technical test with custom inputs, navigate to the run.js file.
+
+- To add a custom account ID change the value on line 16
+- To add custom ticket requests change lines 17 to 19
+
 
 ## Test Suite
 
@@ -57,3 +63,14 @@ Linting can be done with eslint. I have dome this to improve code quality and en
 ```shell
 npm run lint
 ```
+
+## Notes
+
+- The ticket prices and max number of seats are declared as a constant but in a production environment they would likely be read from a configuration file or database.
+
+- The ticket validation service has been built with reusability in mind, so can accept any maximum number of seats value as an input.
+
+- The price calculator has been built with reusability in mind, so can accept any ticket prices as an input. Even though it is specified that the infants ticket is zero pounds.
+
+- In production, every logged entry would contain a hashed version of the account ID in order to make it easier to search for the log entries for a specific user journey.
+

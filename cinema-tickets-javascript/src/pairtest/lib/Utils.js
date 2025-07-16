@@ -1,7 +1,7 @@
-import TicketPaymentService from '../../thirdparty/paymentgateway/TicketPaymentService';
-import SeatReservationService from '../../thirdparty/seatbooking/SeatReservationService';
-import InvalidPurchaseException from './InvalidPurchaseException';
-import { logger } from '../../pairtest/lib/logger';
+import TicketPaymentService from '../../thirdparty/paymentgateway/TicketPaymentService.js';
+import SeatReservationService from '../../thirdparty/seatbooking/SeatReservationService.js';
+import InvalidPurchaseException from './InvalidPurchaseException.js';
+import { logger } from '../../pairtest/lib/logger.js';
 
 export default class Utils {
   callTicketPaymentService(accountId, totalOrderPrice) {

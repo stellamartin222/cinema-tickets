@@ -4,6 +4,7 @@ export default class SeatCalculator {
 
     total += ticketRequest.getNoOfAdultTickets();
     total += ticketRequest.getNoOfChildTickets();
+    //infants are required to sit on an adults lap so are not included in this seat calculator
 
     return total;
   }
