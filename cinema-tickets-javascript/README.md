@@ -50,7 +50,7 @@ To run this technical test with custom inputs, navigate to the run.js file.
 
 ## Test Suite
 
-This technical test was completed using TDD. The testing framework Jest was used to write all of the tests and 100% of the code has test coverage. 
+This technical test was completed using TDD. The testing framework 'Jest' was used to write all of the tests and 100% of the code has test coverage. 
 
 ```shell
 npm test
@@ -58,7 +58,7 @@ npm test
 
 ## Linting
 
-Linting can be done with eslint. I have dome this to improve code quality and enforce consistent coding styles.
+Linting can be done with eslint. This is to improve code quality and enforce consistent coding styles.
 
 ```shell
 npm run lint
@@ -66,11 +66,13 @@ npm run lint
 
 ## Notes
 
-- The ticket prices and max number of seats are declared as a constant but in a production environment they would likely be read from a configuration file or database.
+- Full file logging is enabled and log files can be found within the /logs folder after running the program. Log file names contain the date of the log.
 
-- The ticket validation service has been built with reusability in mind, so can accept any maximum number of seats value as an input.
+- The 'ticket prices' and 'max number of seat's, are declared as constants. In a production environment they would likely be read from a configuration file or a database.
 
-- The price calculator has been built with reusability in mind, so can accept any ticket prices as an input. Even though it is specified that the infants ticket is zero pounds.
+- The 'ticket validation service' has been built with reusability in mind, so can accept any 'maximum number of seats' value as an input.
 
-- In production, every logged entry would contain a hashed version of the account ID in order to make it easier to search for the log entries for a specific user journey.
+- The 'price calculator' has been built with reusability in mind, so can accept any 'ticket prices' as an input. Even though it is specified in the business rules that the price of an infants ticket is zero.
+
+- In production, every logged entry would contain a hashed version of the account ID, in order to make it easier to search for the log entries for a specific user journey.
 
