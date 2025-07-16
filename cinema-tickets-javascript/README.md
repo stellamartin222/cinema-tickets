@@ -44,8 +44,8 @@ npm start
 ```
 To run this technical test with custom inputs, navigate to the run.js file.
 
-- To add a custom account ID change the value on line 16
-- To add custom ticket requests change lines 17 to 19
+- To add a custom account ID change the value on line 14
+- To add custom ticket requests change lines 15 to 17
 
 
 ## Test Suite

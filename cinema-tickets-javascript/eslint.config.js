@@ -14,7 +14,8 @@ export default defineConfig([
       './src/pairtest/lib/TicketTypeRequest.js',
       './src/thirdparty/seatbooking/SeatReservationService.js',
       './src/thirdparty/paymentgateway/TicketPaymentService.js',
-      './logs'
+      './logs',
+      './run.js'
     ]
   },
   {

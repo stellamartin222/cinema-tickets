@@ -11,17 +11,25 @@ import TicketTypeRequest from './src/pairtest/lib/TicketTypeRequest.js';
 const ticketService = new TicketService();
 
 function runDemo() {
+  const accountId = 1234;
+  const adultTicket = 2;
+  const childTicket = 2;
+  const infantTicket = 1;
+
+  const totalPrice = adultTicket * 25 + childTicket * 15;
+  const totalSeats = adultTicket + childTicket;
+
   try {
     const ticketBooking = ticketService.purchaseTickets(
-      123456,
-      new TicketTypeRequest('ADULT', 2),
-      new TicketTypeRequest('CHILD', 2),
-      new TicketTypeRequest('INFANT', 1)
+      accountId,
+      new TicketTypeRequest('ADULT', adultTicket),
+      new TicketTypeRequest('CHILD', childTicket),
+      new TicketTypeRequest('INFANT', infantTicket)
     );
 
-    console.log('Ticket booking successful!');
-    console.log('Expected cost: £80 (2×£25 + 2×£15 + 1×£0)');
-    console.log('Expected seats: 4 (2 Adults + 2 Children, Infant sits on lap)');
+    console.log(`Ticket booking successful for account ID ${accountId}!`);
+    console.log(`Expected cost: £${totalPrice} (${adultTicket}×£25 + ${childTicket}×£15 + ${infantTicket}×£0)`);
+    console.log(`Expected seats: ${totalSeats} (${adultTicket} Adults + ${childTicket} Children, Infant sits on lap)`);
     console.log('Ticket booking details:', JSON.stringify(ticketBooking, null, 2));
   } catch (error) {
     console.log('Ticket booking failed:', error.message);
