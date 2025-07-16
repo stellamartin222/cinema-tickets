@@ -36,12 +36,17 @@ export default class TicketService {
       return err.globalExceptionHandler();
     }
 
-    logger.log('info', {
+    let successObj = {
+      statusCode: 200,
       type: 'purchaseTickets',
       title: 'Success',
       detail: 'ticket purchase successful'
+    }
+
+    logger.log('info', {
+      ...successObj
     })
 
-    return {status: 201, message: 'Thank you for your order.'};
+    return successObj;
   }
 }

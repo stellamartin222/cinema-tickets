@@ -5,6 +5,13 @@ describe('TicketService', () => {
   let ticketService;
 
   const VALID_ACCOUNT_ID = 1234;
+
+  const successObj ={
+    detail: "ticket purchase successful",
+    statusCode: 200,
+    title: "Success",
+    type: "purchaseTickets",
+  }
   
   beforeEach(() => {
       ticketService = new TicketService;
@@ -36,13 +43,13 @@ describe('TicketService', () => {
         new TicketTypeRequest('CHILD', 1), 
         new TicketTypeRequest('INFANT', 1))
       )
-      .toEqual({status: 201, message: 'Thank you for your order.'});
+      .toEqual(successObj);
       expect(ticketService.purchaseTickets(
         VALID_ACCOUNT_ID,
         new TicketTypeRequest('ADULT', 1), 
         new TicketTypeRequest('CHILD', 0), 
         new TicketTypeRequest('INFANT', 1)))
-      .toEqual({status: 201, message: 'Thank you for your order.'});
+      .toEqual(successObj);
   });
 
   it('handles errors', () => {
