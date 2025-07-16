@@ -32,8 +32,8 @@ export default class TicketService {
 
       totalSeatNo = seatCalculator.calculate(ticketRequest);
       utils.callSeatReservationService(accountId, totalSeatNo);
-    } catch (err) {
-      return err.globalExceptionHandler();
+    } catch (error) {
+      return error.globalExceptionHandler();
     }
 
     let successObj = {

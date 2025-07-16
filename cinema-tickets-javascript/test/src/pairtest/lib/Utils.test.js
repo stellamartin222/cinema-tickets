@@ -16,13 +16,13 @@ describe('Utils', () => {
     [1234, 'Invalid ticket price', 'TypeError: totalAmountToPay must be an integer'],
   ])(
     'catches errors thrown by ticket payment service',
-    async (accountId, totalOrderPrice, errMessage) => {
+    async (accountId, totalOrderPrice, errorMessage) => {
       try {
         utils.callTicketPaymentService(accountId, totalOrderPrice);
-      } catch (err) {
-        expect(err.globalExceptionHandler().type).toBe('callTicketPaymentService');
-        expect(err.globalExceptionHandler().detail).toBe(
-          `Ticket payment service error: ${errMessage}`
+      } catch (error) {
+        expect(error.globalExceptionHandler().type).toBe('callTicketPaymentService');
+        expect(error.globalExceptionHandler().detail).toBe(
+          `Ticket payment service error: ${errorMessage}`
         );
       }
     }
@@ -37,13 +37,13 @@ describe('Utils', () => {
     [1234, 'Invalid seat input', 'TypeError: totalSeatsToAllocate must be an integer'],
   ])(
     'catches errors thrown by seat reservation service',
-    async (accountId, totalSeatsToAllocate, errMessage) => {
+    async (accountId, totalSeatsToAllocate, errorMessage) => {
       try {
         utils.callSeatReservationService(accountId, totalSeatsToAllocate);
-      } catch (err) {
-        expect(err.globalExceptionHandler().type).toBe('callSeatReservationService');
-        expect(err.globalExceptionHandler().detail).toBe(
-          `Seat reservation service error: ${errMessage}`
+      } catch (error) {
+        expect(error.globalExceptionHandler().type).toBe('callSeatReservationService');
+        expect(error.globalExceptionHandler().detail).toBe(
+          `Seat reservation service error: ${errorMessage}`
         );
       }
     }

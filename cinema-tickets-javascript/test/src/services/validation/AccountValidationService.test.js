@@ -23,9 +23,9 @@ describe('validateAccountId', () => {
 
       try {
         accountValidationService.validateAccountId(invalidAccountId);
-      } catch (err) {
-        expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-        expect(err.globalExceptionHandler().detail).toBe('Account ID must be a number.');
+      } catch (error) {
+        expect(error.globalExceptionHandler().type).toBe(ERROR_NAME);
+        expect(error.globalExceptionHandler().detail).toBe('Account ID must be a number.');
       }
     }
   );
@@ -37,9 +37,9 @@ describe('validateAccountId', () => {
 
     try {
       accountValidationService.validateAccountId(invalidAccountId);
-    } catch (err) {
-      expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-      expect(err.globalExceptionHandler().detail).toBe('Account ID must be greater than zero.');
+    } catch (error) {
+      expect(error.globalExceptionHandler().type).toBe(ERROR_NAME);
+      expect(error.globalExceptionHandler().detail).toBe('Account ID must be greater than zero.');
     }
   });
 });
