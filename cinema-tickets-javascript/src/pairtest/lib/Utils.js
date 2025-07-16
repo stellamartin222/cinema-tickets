@@ -1,6 +1,7 @@
 import TicketPaymentService from '../../thirdparty/paymentgateway/TicketPaymentService';
 import SeatReservationService from '../../thirdparty/seatbooking/SeatReservationService';
 import InvalidPurchaseException from './InvalidPurchaseException';
+import {logger} from '../../pairtest/lib/logger'
 
 export default class Utils{
 
@@ -14,6 +15,8 @@ export default class Utils{
         `Ticket payment service error: ${error}`
       );
     }
+
+    logger.log('info', `Order total: £${totalOrderPrice}`)
   };
 
   callSeatReservationService(accountId, totalSeatsToAllocate){
@@ -26,5 +29,7 @@ export default class Utils{
         `Seat reservation service error: ${error}`
       );
     }
+
+    logger.log('info', `total number of seats booked ${totalSeatsToAllocate}`)
   };
 };

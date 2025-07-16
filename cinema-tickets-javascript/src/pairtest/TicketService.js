@@ -3,6 +3,7 @@ import TicketPriceCalculator from '../services/ticketcalculator/TicketPriceCalcu
 import AccountValidationService from '../services/validation/AccountValidationService.js';
 import TicketValidationService from '../services/validation/TicketValidationService.js';
 import Utils from './lib/Utils.js';
+import { logger } from './lib/logger.js';
 
 export default class TicketService {
   /**
@@ -13,25 +14,33 @@ export default class TicketService {
   #MAX_SEAT_TOTAL = 25;
 
   purchaseTickets(accountId, ...ticketTypeRequests) {
-    let accountValidationService = new AccountValidationService();
-    let ticketValidationService = new TicketValidationService(this.#MAX_SEAT_TOTAL);
-    let ticketPriceCalculator = new TicketPriceCalculator(this.#TICKET_PRICES);
-    let utils = new Utils();
-    let seatCalculator = new SeatCalculator();
+    const accountValidationService = new AccountValidationService();
+    const ticketValidationService = new TicketValidationService(this.#MAX_SEAT_TOTAL);
+    const ticketPriceCalculator = new TicketPriceCalculator(this.#TICKET_PRICES);
+    let totalAmountToPay;
+    let totalSeatNo;
+    const utils = new Utils();
+    const seatCalculator = new SeatCalculator();
     let ticketRequest;
 
     try{
       accountValidationService.validateAccountId(accountId);
       ticketRequest = ticketValidationService.validateTickets(ticketTypeRequests);
 
-      let totalOrderPrice = ticketPriceCalculator.calculate(ticketRequest);
-      utils.callTicketPaymentService(accountId, totalOrderPrice);
+      totalAmountToPay = ticketPriceCalculator.calculate(ticketRequest);
+      utils.callTicketPaymentService(accountId, totalAmountToPay);
 
-      let totalSeatNo = seatCalculator.calculate(ticketRequest);
+      totalSeatNo = seatCalculator.calculate(ticketRequest);
       utils.callSeatReservationService(accountId, totalSeatNo);
     } catch(err){
       return err.globalExceptionHandler();
     }
+
+    logger.log('info', {
+      type: 'purchaseTickets',
+      title: 'Success',
+      detail: 'ticket purchase successful'
+    })
 
     return {status: 201, message: 'Thank you for your order.'};
   }

@@ -44,4 +44,17 @@ describe('TicketService', () => {
         new TicketTypeRequest('INFANT', 1)))
       .toEqual({status: 201, message: 'Thank you for your order.'});
   });
+
+  it('handles errors', () => {
+    try {
+      ticketService.purchaseTickets(
+         VALID_ACCOUNT_ID, 
+         new TicketTypeRequest('ADULT', 0), 
+         new TicketTypeRequest('CHILD', 1), 
+         new TicketTypeRequest('INFANT', 1)
+       )
+    } catch (error) {
+      expect(error).toBe()
+    }
+  });
 });

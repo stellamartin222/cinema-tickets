@@ -1,3 +1,5 @@
+import { logger } from './logger';
+
 export default class InvalidPurchaseException extends Error {
   #errorName;
   #errorMessage;
@@ -15,6 +17,8 @@ export default class InvalidPurchaseException extends Error {
       title: 'An error occured',
       detail: this.#errorMessage,
     }
+
+    logger.log('error', {...errorObj})
     
     return errorObj;
   }

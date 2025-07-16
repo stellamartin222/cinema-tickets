@@ -1,16 +1,23 @@
 import InvalidPurchaseException from "../../pairtest/lib/InvalidPurchaseException";
+import {logger} from '../../pairtest/lib/logger'
 
 export default class AccountValidationService {
   validateAccountId(accountId) {
-    let errorName = 'validateAccountId';
+    let serviceName = 'validateAccountId';
 
     if(isNaN(accountId) || !Number.isInteger(accountId)){
-      throw new InvalidPurchaseException(errorName, 'Account ID must be a number.')
+      throw new InvalidPurchaseException(serviceName, 'Account ID must be a number.')
     } else if (accountId <= 0){
-      throw new InvalidPurchaseException(errorName, 'Account ID must be greater than zero.')
+      throw new InvalidPurchaseException(serviceName, 'Account ID must be greater than zero.')
     }
 
     this.#accountService();
+
+    logger.log('info',{
+      type: serviceName,
+      title: 'Success',
+      detail: `account ID ${accountId} is valid`
+    })
 
     return {status: 200};
   }
