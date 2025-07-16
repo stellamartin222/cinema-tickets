@@ -3,35 +3,35 @@ export default class TicketRequest {
   #noOfChildTickets = 0;
   #noOfInfantTickets = 0;
 
-  getNoOfAdultTickets(){
+  getNoOfAdultTickets() {
     return this.#noOfAdultTickets;
   }
 
-  addNoOfAdultTickets(noOfTickets){
+  addNoOfAdultTickets(noOfTickets) {
     this.#noOfAdultTickets += noOfTickets;
   }
 
-  getNoOfChildTickets(){
+  getNoOfChildTickets() {
     return this.#noOfChildTickets;
   }
 
-  addNoOfChildTickets(noOfTickets){
+  addNoOfChildTickets(noOfTickets) {
     this.#noOfChildTickets += noOfTickets;
   }
 
-  getNoOfInfantTickets(){
+  getNoOfInfantTickets() {
     return this.#noOfInfantTickets;
   }
 
-  addNoOfInfantTickets(noOfTickets){
+  addNoOfInfantTickets(noOfTickets) {
     this.#noOfInfantTickets += noOfTickets;
   }
 
-  getTotalNoOfTickets(){
+  getTotalNoOfTickets() {
     return this.#noOfAdultTickets + this.#noOfChildTickets + this.#noOfInfantTickets;
   }
 
-  getTotalNoOfSeats(){
+  getTotalNoOfSeats() {
     return this.#noOfAdultTickets + this.#noOfChildTickets;
   }
 }

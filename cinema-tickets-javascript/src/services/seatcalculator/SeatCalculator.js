@@ -1,5 +1,5 @@
 export default class SeatCalculator {
-  calculate(ticketRequest){
+  calculate(ticketRequest) {
     let total = 0;
 
     total += ticketRequest.getNoOfAdultTickets();

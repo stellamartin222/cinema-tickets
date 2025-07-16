@@ -10,7 +10,7 @@ export default class TicketService {
    * Should only have private methods other than the one below.
    */
 
-  #TICKET_PRICES = {ADULT: 25, CHILD: 15, INFANT: 0}
+  #TICKET_PRICES = { ADULT: 25, CHILD: 15, INFANT: 0 };
   #MAX_SEAT_TOTAL = 25;
 
   purchaseTickets(accountId, ...ticketTypeRequests) {
@@ -23,7 +23,7 @@ export default class TicketService {
     const seatCalculator = new SeatCalculator();
     let ticketRequest;
 
-    try{
+    try {
       accountValidationService.validateAccountId(accountId);
       ticketRequest = ticketValidationService.validateTickets(ticketTypeRequests);
 
@@ -32,7 +32,7 @@ export default class TicketService {
 
       totalSeatNo = seatCalculator.calculate(ticketRequest);
       utils.callSeatReservationService(accountId, totalSeatNo);
-    } catch(err){
+    } catch (err) {
       return err.globalExceptionHandler();
     }
 
@@ -40,12 +40,12 @@ export default class TicketService {
       statusCode: 200,
       type: 'purchaseTickets',
       title: 'Success',
-      detail: 'ticket purchase successful'
-    }
+      detail: 'ticket purchase successful',
+    };
 
     logger.log('info', {
-      ...successObj
-    })
+      ...successObj,
+    });
 
     return successObj;
   }

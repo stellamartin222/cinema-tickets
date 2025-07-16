@@ -1,106 +1,119 @@
-import TicketValidationService from "../../../../src/services/validation/TicketValidationService";
-import InvalidPurchaseException from "../../../../src/pairtest/lib/InvalidPurchaseException";
-import TicketRequest from "../../../../src/pairtest/lib/TicketRequest";
-import TicketTypeRequest from "../../../../src/pairtest/lib/TicketTypeRequest";
+import TicketValidationService from '../../../../src/services/validation/TicketValidationService';
+import InvalidPurchaseException from '../../../../src/pairtest/lib/InvalidPurchaseException';
+import TicketRequest from '../../../../src/pairtest/lib/TicketRequest';
+import TicketTypeRequest from '../../../../src/pairtest/lib/TicketTypeRequest';
 
-describe('validateTicketTypeRequest', () => { 
+describe('validateTicketTypeRequest', () => {
   const ERROR_NAME = 'validateTicketTypeRequest';
   const MAX_SEAT_TOTAL = 25;
 
   let ticketValidationService;
-  
+
   beforeEach(async () => {
-      ticketValidationService = new TicketValidationService(MAX_SEAT_TOTAL);
+    ticketValidationService = new TicketValidationService(MAX_SEAT_TOTAL);
   });
 
   it('returns 200 and one adult ticket for a valid ticket request', () => {
     const result = ticketValidationService.validateTickets([new TicketTypeRequest('ADULT', 1)]);
-    expect(result).toBeInstanceOf(TicketRequest)
-    expect(result.getNoOfAdultTickets()).toBe(1)
-    expect(result.getNoOfChildTickets()).toBe(0)
-    expect(result.getNoOfInfantTickets()).toBe(0)
-    expect(result.getTotalNoOfTickets()).toBe(1)
-    expect(result.getTotalNoOfSeats()).toBe(1)
-  });
-  
-  it('throws error when no ticketTypeRequest', () => {
-    expect(() => ticketValidationService.validateTickets()
-      .toThrow(InvalidPurchaseException))
-      
-      try {
-        ticketValidationService.validateTickets()
-      } catch (err) {
-        expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-        expect(err.globalExceptionHandler().detail).toBe('No tickets requested.');
-      }
+    expect(result).toBeInstanceOf(TicketRequest);
+    expect(result.getNoOfAdultTickets()).toBe(1);
+    expect(result.getNoOfChildTickets()).toBe(0);
+    expect(result.getNoOfInfantTickets()).toBe(0);
+    expect(result.getTotalNoOfTickets()).toBe(1);
+    expect(result.getTotalNoOfSeats()).toBe(1);
   });
 
-  
-  it('throws error when total ticket number is zero', () => {
-    expect(() => ticketValidationService.validateTickets([new TicketTypeRequest('ADULT', 0)])
-      .toThrow(InvalidPurchaseException))
-      
-      try {
-        ticketValidationService.validateTickets([new TicketTypeRequest('ADULT', 0)])
-      } catch (err) {
-        expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-        expect(err.globalExceptionHandler().detail).toBe('Cannot request zero tickets.');
-      }
+  it('throws error when no ticketTypeRequest', () => {
+    expect(() => ticketValidationService.validateTickets().toThrow(InvalidPurchaseException));
+
+    try {
+      ticketValidationService.validateTickets();
+    } catch (err) {
+      expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
+      expect(err.globalExceptionHandler().detail).toBe('No tickets requested.');
+    }
   });
-  
+
+  it('throws error when total ticket number is zero', () => {
+    expect(() =>
+      ticketValidationService
+        .validateTickets([new TicketTypeRequest('ADULT', 0)])
+        .toThrow(InvalidPurchaseException)
+    );
+
+    try {
+      ticketValidationService.validateTickets([new TicketTypeRequest('ADULT', 0)]);
+    } catch (err) {
+      expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
+      expect(err.globalExceptionHandler().detail).toBe('Cannot request zero tickets.');
+    }
+  });
+
   it('throws an error if less adults than infants', () => {
-    expect(() => ticketValidationService.validateTickets([
-      new TicketTypeRequest('ADULT', 1),
-      new TicketTypeRequest('INFANT', 4)
-    ])
-    .toThrow(InvalidPurchaseException))
-    
+    expect(() =>
+      ticketValidationService
+        .validateTickets([new TicketTypeRequest('ADULT', 1), new TicketTypeRequest('INFANT', 4)])
+        .toThrow(InvalidPurchaseException)
+    );
+
     try {
       ticketValidationService.validateTickets([
         new TicketTypeRequest('ADULT', 1),
-        new TicketTypeRequest('INFANT', 4)
-      ])
+        new TicketTypeRequest('INFANT', 4),
+      ]);
     } catch (err) {
       expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-      expect(err.globalExceptionHandler().detail).toBe('Must be one adult per infant ticket purchased.');
+      expect(err.globalExceptionHandler().detail).toBe(
+        'Must be one adult per infant ticket purchased.'
+      );
     }
   });
 
   it('throws error if children without adults', () => {
-    expect(() => ticketValidationService.validateTickets([new TicketTypeRequest('CHILD', 1)])
-    .toThrow(InvalidPurchaseException))
-    
+    expect(() =>
+      ticketValidationService
+        .validateTickets([new TicketTypeRequest('CHILD', 1)])
+        .toThrow(InvalidPurchaseException)
+    );
+
     try {
-      ticketValidationService.validateTickets([new TicketTypeRequest('CHILD', 1)])
+      ticketValidationService.validateTickets([new TicketTypeRequest('CHILD', 1)]);
     } catch (err) {
       expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-      expect(err.globalExceptionHandler().detail).toBe('Children must be accompanied by at least one adult.');
+      expect(err.globalExceptionHandler().detail).toBe(
+        'Children must be accompanied by at least one adult.'
+      );
     }
   });
 
   it('returns 200 if at least one adult accompanies multiple child tickets', () => {
-    expect(ticketValidationService.validateTickets([
-      new TicketTypeRequest('ADULT', 1),
-      new TicketTypeRequest('CHILD', 4)
-    ])).toBeInstanceOf(TicketRequest)
+    expect(
+      ticketValidationService.validateTickets([
+        new TicketTypeRequest('ADULT', 1),
+        new TicketTypeRequest('CHILD', 4),
+      ])
+    ).toBeInstanceOf(TicketRequest);
   });
 
   it.each([
     [new TicketTypeRequest('ADULT', 26), new TicketTypeRequest('CHILD', 0)],
     [new TicketTypeRequest('ADULT', 15), new TicketTypeRequest('CHILD', 15)],
-    [new TicketTypeRequest('ADULT', 9007199254740991), new TicketTypeRequest('CHILD', 9007199254740991)], //max value of integer
-  ])(
-    'throws error if ticket total exceeds 25',
-    (adultTickets, childTickets) => {
-      expect(() => ticketValidationService.validateTickets([adultTickets, childTickets])
-      .toThrow(InvalidPurchaseException))
-      
-      try {
-        ticketValidationService.validateTickets([adultTickets, childTickets])
-      } catch (err) {
-        expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
-        expect(err.globalExceptionHandler().detail).toBe('Total ticket number cannot exceed 25.');
-      }
+    [
+      new TicketTypeRequest('ADULT', 9007199254740991),
+      new TicketTypeRequest('CHILD', 9007199254740991),
+    ], //max value of integer
+  ])('throws error if ticket total exceeds 25', (adultTickets, childTickets) => {
+    expect(() =>
+      ticketValidationService
+        .validateTickets([adultTickets, childTickets])
+        .toThrow(InvalidPurchaseException)
+    );
+
+    try {
+      ticketValidationService.validateTickets([adultTickets, childTickets]);
+    } catch (err) {
+      expect(err.globalExceptionHandler().type).toBe(ERROR_NAME);
+      expect(err.globalExceptionHandler().detail).toBe('Total ticket number cannot exceed 25.');
     }
-  );
+  });
 });
